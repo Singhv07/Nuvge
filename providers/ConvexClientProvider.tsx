@@ -19,7 +19,7 @@ function ConvexClientProvider({ children }: Props) {
         <AuthLoading>
           <LoadingLogo />
         </AuthLoading>
-        {children}
+          {children}
       </ConvexProviderWithClerk>
     </ClerkProvider>
   )
