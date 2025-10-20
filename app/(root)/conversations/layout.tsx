@@ -1,11 +1,12 @@
 import React from 'react'
 import SidebarWrapper from '@/components/shared/sidebar/SidebarWrapper';
+import ItemList from '@/components/shared/item-list/ItemList';
 
 type Props = React.PropsWithChildren<object>
 
 const ConversationsLayout = (props: Props) => {
   return (
-      <div>Conversations Layout</div>
+      <ItemList title="Conversations">Conversations Page</ItemList>
 
   )
 }
