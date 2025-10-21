@@ -1,13 +1,16 @@
-import React from 'react'
+import React, { Children } from 'react'
 import SidebarWrapper from '@/components/shared/sidebar/SidebarWrapper';
 import ItemList from '@/components/shared/item-list/ItemList';
 
-type Props = React.PropsWithChildren<object>
+type Props = React.PropsWithChildren<{}>
 
-const ConversationsLayout = (props: Props) => {
+const ConversationsLayout = ({children} : Props) => {
   return (
-      <ItemList title="Conversations">Conversations Page</ItemList>
-
+    <>
+    <ItemList title="Conversations">Conversations</ItemList>  
+      {children}
+    </>
+       
   )
 }
 export default ConversationsLayout

@@ -1,10 +1,11 @@
+import ConversationContainer from '@/components/shared/conversation/ConversationContainer'
 import React from 'react'
 
 type Props = {unknown: unknown }
 
 const ConversationsPage = (props: Props) => {
   return (
-    <div>Conversations Page</div>
+    <ConversationContainer>Conversations</ConversationContainer>
   )
 }
 
