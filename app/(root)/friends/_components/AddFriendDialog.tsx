@@ -10,8 +10,10 @@ import { Button } from '@/components/ui/button'
 import { UserPlus } from 'lucide-react'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-
-type Props = {}
+import { useMutationState } from '@/app/hooks/useMutationState'
+import { api } from '@/convex/_generated/api'
+import { toast } from 'sonner'
+import { ConvexError } from 'convex/values'
 
 const addFriendFormSchema = z.object({
     email: 
@@ -21,7 +23,9 @@ const addFriendFormSchema = z.object({
     .email("Please enter a valid email address"),
 })
 
-const AddFriendDialog = (props: Props) => {
+const AddFriendDialog = () => {
+
+    const { mutate: createrequest, pending } = useMutationState(api.requests.createRequest);
 
     const form = useForm<z.infer<typeof addFriendFormSchema>>({
         resolver: zodResolver(addFriendFormSchema),
@@ -30,19 +34,28 @@ const AddFriendDialog = (props: Props) => {
         },
     });
 
-    const handleSubmit = () => {}
+    const handleSubmit = async (values: z.
+        infer<typeof addFriendFormSchema>
+    ) => {
+        await createrequest({email: values.email})
+        .then(() => {
+            form.reset();
+            toast.success("Friend request sent!")
+        }).catch(error => {
+            toast.error(error instanceof ConvexError ? error.data : "Unexpected error occured")
+        })
+    }
 
   return (
     <Dialog>
         <Tooltip>
-            <TooltipTrigger>
-                <Button asChild size="icon" variant="outline">
-                    <DialogTrigger>
-                        <UserPlus />
-                    </DialogTrigger>
+            <TooltipTrigger asChild>
+            <DialogTrigger asChild>
+                <Button size="icon" variant="outline">
+                  <UserPlus />
                 </Button>
+            </DialogTrigger>
             </TooltipTrigger>
-
             <TooltipContent>
                 <p>Add Friends</p>
             </TooltipContent>

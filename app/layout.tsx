@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import ConvexClientProvider from "@/providers/ConvexClientProvider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/ui/theme/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,7 +27,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Inline script ensures theme is applied before React hydration */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('theme');
+                  if (!theme) {
+                    var mql = window.matchMedia('(prefers-color-scheme: dark)');
+                    theme = mql.matches ? 'dark' : 'light';
+                  }
+                  document.documentElement.className = theme;
+                  document.documentElement.style.colorScheme = theme;
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -37,6 +58,7 @@ export default function RootLayout({
             disableTransitionOnChange>
           <ConvexClientProvider>
           <TooltipProvider>{children}</TooltipProvider>
+          <Toaster richColors/>
         </ConvexClientProvider>
         </ThemeProvider>  
         
