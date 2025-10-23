@@ -25,15 +25,16 @@ handler: async (ctx, args) => {
     .collect();
 
     const requestsWithSender = await 
-    Promise.all(requests.map( async(requests) => {
+    Promise.all(
+        requests.map( async(request) => {
         const sender = await ctx.db.get
-        (requests.sender)
+        (request.sender)
 
         if(!sender){
             throw new Error("Request sender could not be found")
         }
 
-        return { sender, requests }
+        return { sender, request }
 
         })
     )

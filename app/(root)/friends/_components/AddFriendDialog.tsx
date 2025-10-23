@@ -25,7 +25,7 @@ const addFriendFormSchema = z.object({
 
 const AddFriendDialog = () => {
 
-    const { mutate: createrequest, pending } = useMutationState(api.requests.createRequest);
+    const { mutate: createRequest, pending } = useMutationState(api.request.createRequest);
 
     const form = useForm<z.infer<typeof addFriendFormSchema>>({
         resolver: zodResolver(addFriendFormSchema),
@@ -37,7 +37,7 @@ const AddFriendDialog = () => {
     const handleSubmit = async (values: z.
         infer<typeof addFriendFormSchema>
     ) => {
-        await createrequest({email: values.email})
+        await createRequest({email: values.email})
         .then(() => {
             form.reset();
             toast.success("Friend request sent!")
