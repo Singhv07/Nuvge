@@ -2,6 +2,7 @@
 
 import { useConversation } from '@/app/hooks/useConversation'
 import { useNavigation } from '@/app/hooks/useNavigation'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { ThemeToggle } from '@/components/ui/theme/theme-toggle'
@@ -26,12 +27,15 @@ const MobileNav = () => {
           {paths.map((path, id) => (
             <li key={id} className="relative">
               <Tooltip>
-                <TooltipTrigger asChild>
+                <TooltipTrigger>
                   <Button asChild size="icon" variant={path.active ? "default" : "outline"}>
                     <Link href={path.href}>
                       {path.icon}
                     </Link>
                   </Button>
+                  {path.count ? <Badge className='absolute left-7 bottom-6 rounded-full'>
+                    {path.count}
+                  </Badge> : null}
                 </TooltipTrigger>
                 <TooltipContent>{path.name}</TooltipContent>
               </Tooltip>

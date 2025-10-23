@@ -8,6 +8,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip
 import { UserButton } from '@clerk/nextjs'
 import Link from 'next/link'
 import React from 'react'
+import { Badge } from "@/components/ui/badge"
 
 const DesktopNav = () => {
   const { paths } = useNavigation();
@@ -19,12 +20,15 @@ const DesktopNav = () => {
           {paths.map((path, id) => (
             <li key={id} className="relative">
               <Tooltip>
-                <TooltipTrigger asChild>
+                <TooltipTrigger>
                   <Button asChild size="icon" variant={path.active ? "default" : "outline"}>
                     <Link href={path.href}>
                       {path.icon}
                     </Link>
                   </Button>
+                  {path.count ? <Badge className='absolute left-6 bottom-7 px-2 rounded-full'>
+                    {path.count}
+                  </Badge>: null}
                 </TooltipTrigger>
                 <TooltipContent>{path.name}</TooltipContent>
               </Tooltip>
