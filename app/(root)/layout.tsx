@@ -1,10 +1,24 @@
-import SidebarWrapper from '@/components/shared/sidebar/SidebarWrapper';
-import React from 'react';
+"use client"
 
-type Props = React.PropsWithChildren<object>; // or 'unknown' based on use case
+import { Authenticated, Unauthenticated, AuthLoading } from "convex/react";
+import SidebarWrapper from "@/components/shared/sidebar/SidebarWrapper";
+import LoadingLogo from "@/components/shared/LoadingLogo";
+import { SignIn } from "@clerk/nextjs";
 
-const Layout = ({children}: Props) => {
-  return <SidebarWrapper>{children}</SidebarWrapper>;
+const Layout = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <>
+      <AuthLoading>
+        <LoadingLogo />
+      </AuthLoading>
+      <Authenticated>
+        <SidebarWrapper>{children}</SidebarWrapper>
+      </Authenticated>
+      <Unauthenticated>
+        <SignIn />
+      </Unauthenticated>
+    </>
+  );
 };
 
 export default Layout;
