@@ -1,7 +1,8 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card';
 import { Id } from '@/convex/_generated/dataModel';
-import { User } from 'lucide-react';
+import { User, Check, X } from 'lucide-react';
 import React from 'react'
 
 type Props = {
@@ -21,6 +22,16 @@ const Request = ({ id, imageUrl, username, email}: Props) => {
                     <User />
                 </AvatarFallback>
             </Avatar>
+            <div className='flex flex-col truncate'>
+                <h4 className="truncate">
+                    {username}
+                </h4>
+                <p className="text-xs text-muted-foreground truncate">{email}</p>
+            </div>
+        </div>
+        <div className='flex items-center gap-2'>
+            <Button size='icon' onClick={() => {}}><Check /></Button>
+            <Button size='icon' variant='destructive' onClick={() => {}} className='bg-red-600'><X className='h-4 w-4'/></Button>
         </div>
     </Card>
   )
