@@ -14,6 +14,7 @@ import { useMutationState } from '@/app/hooks/useMutationState'
 import { api } from '@/convex/_generated/api'
 import { toast } from 'sonner'
 import { ConvexError } from 'convex/values'
+import { create, deny } from '@/convex/request'
 
 const addFriendFormSchema = z.object({
     email: 
@@ -25,7 +26,7 @@ const addFriendFormSchema = z.object({
 
 const AddFriendDialog = () => {
 
-    const { mutate: createRequest, pending } = useMutationState(api.request.createRequest);
+    const { mutate: createRequest, pending } = useMutationState(api.request.create);
 
     const form = useForm<z.infer<typeof addFriendFormSchema>>({
         resolver: zodResolver(addFriendFormSchema),
@@ -83,7 +84,7 @@ const AddFriendDialog = () => {
                         )} />
                     )} />
                     <DialogFooter>
-                        <Button disabled={false}
+                        <Button disabled={pending}
                         type="submit">Send</Button>
                     </DialogFooter>
                 </form>

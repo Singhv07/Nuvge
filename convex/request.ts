@@ -2,7 +2,7 @@ import { mutation } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 import { getUserByClerkId } from "./_utils";
 
-export const createRequest = mutation({
+export const create = mutation({
     args: {
         email: v.string(),
     },
@@ -61,5 +61,35 @@ export const createRequest = mutation({
         });
 
         return request;
+    }
+})
+
+export const deny = mutation({
+    args: {
+        id: v.id("requests")
+    },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity()
+
+        if(!identity) {
+            throw new ConvexError("Unauthorized");
+        }
+ 
+        const currentUser = await 
+        getUserByClerkId({
+            ctx, clerkId: identity.subject
+        })
+
+        if(!currentUser) {
+            throw new ConvexError("User not found");
+        }
+
+        const request = await ctx.db.get(args.id)
+
+        if(!request || request.receiver !== currentUser._id) {
+            throw new ConvexError("There is an error denying this request")
+        }
+
+        await ctx.db.delete(request._id)
     }
 })
