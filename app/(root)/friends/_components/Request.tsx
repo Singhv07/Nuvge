@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card';
 import { api } from '@/convex/_generated/api';
 import { Id } from '@/convex/_generated/dataModel';
-import { error } from 'console';
 import { ConvexError } from 'convex/values';
 import { User, Check, X } from 'lucide-react';
 import React from 'react'
