@@ -105,3 +105,8 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes gradientFade {
+  0%,100% { filter: blur(70px) brightness(1) }
+  50% { filter: blur(100px) brightness(1.15) }
+}

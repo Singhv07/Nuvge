@@ -22,7 +22,7 @@ const Request = ({ id, imageUrl, username, email}: Props) => {
     const {mutate: acceptRequest, pending: acceptPending} = useMutationState(api.request.accept)
 
   return (
-    <Card className='w-full p-2 flex flex-row item-center justify-between gap-2'>
+    <Card className='w-full p-2 flex flex-row item-center justify-between gap-2  rounded-full'>
         <div className='flex items-center gap-4 truncate'>
             <Avatar>
                 <AvatarImage src={imageUrl}/>
@@ -34,26 +34,10 @@ const Request = ({ id, imageUrl, username, email}: Props) => {
                 <h4 className="truncate">
                     {username}
                 </h4>
-                <p className="text-xs text-muted-foreground truncate">{email}</p>
+                <p className="text-xs text-muted-foreground truncate text-gray-500">{email}</p>
             </div>
         </div>
         <div className='flex items-center gap-2'>
-            <Button 
-                size='icon' 
-                disabled={denyPending || acceptPending} 
-                onClick={() => {
-                    acceptRequest({id}).then(() => {
-                        toast.success("Friend request accepted")
-                    }).catch((error) => {
-                        toast.error(
-                            error instanceof ConvexError 
-                            ? error.data 
-                            : "Unexpected error occured"
-                        )
-                    })
-                }}>
-                    <Check />
-            </Button>
             <Button 
                 size='icon' 
                 disabled={denyPending} 
@@ -68,8 +52,25 @@ const Request = ({ id, imageUrl, username, email}: Props) => {
                         )
                     })
                 }} 
-                className='bg-red-600'>
-                    <X className='h-4 w-4'/>
+                className='bg-gray-600 rounded-full w-6 h-6'>
+                    <X className='h-5 w-5'/>
+            </Button>
+            <Button 
+                className='rounded-full'
+                size='icon' 
+                disabled={denyPending || acceptPending} 
+                onClick={() => {
+                    acceptRequest({id}).then(() => {
+                        toast.success("Friend request accepted")
+                    }).catch((error) => {
+                        toast.error(
+                            error instanceof ConvexError 
+                            ? error.data 
+                            : "Unexpected error occured"
+                        )
+                    })
+                }}>
+                    <Check />
             </Button>
         </div>
     </Card>
