@@ -4,7 +4,7 @@ type Props = {}
 
 const Body = (props: Props) => {
   return (
-    <div>Body</div>
+    <div className='flex-1 w-full flex overflow-y-scroll flex-col-reverse gap-2 p-2 no-scrollar'>Body</div>
   )
 }
 

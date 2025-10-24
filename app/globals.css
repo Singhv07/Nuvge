@@ -110,3 +110,14 @@ body {
   0%,100% { filter: blur(70px) brightness(1) }
   50% { filter: blur(100px) brightness(1.15) }
 }
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
