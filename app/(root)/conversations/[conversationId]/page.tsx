@@ -2,6 +2,7 @@
 
 import ConversationContainer from "@/components/shared/conversation/ConversationContainer";
 import { api } from "@/convex/_generated/api";
+import { use } from "react";
 import { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
 import { Loader2 } from "lucide-react";
@@ -10,13 +11,14 @@ import Body from "./_components/body/Body";
 import ChatInput from "./_components/input/ChatInput";
 
 type Props = {
-  params: {
-    conversationId: Id<"conversations">;
-  };
+  params: Promise<{ conversationId: Id<"conversations"> }>;
 };
 
 const ConversationsPage = ({ params }: Props) => {
-  const { conversationId } = params;
+
+  const resolvedParams = use(params);
+  const { conversationId } = resolvedParams;
+
   const conversation = useQuery(api.conversation.get, { id: conversationId });
 
   if (conversation === undefined) {
