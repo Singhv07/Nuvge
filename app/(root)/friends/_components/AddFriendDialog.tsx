@@ -14,6 +14,7 @@ import { useMutationState } from '@/app/hooks/useMutationState'
 import { api } from '@/convex/_generated/api'
 import { toast } from 'sonner'
 import { ConvexError } from 'convex/values'
+import { Send } from 'lucide-react'
 
 const addFriendFormSchema = z.object({
     email: 
@@ -51,7 +52,7 @@ const AddFriendDialog = () => {
         <Tooltip>
             <TooltipTrigger asChild>
             <DialogTrigger asChild>
-                <Button size="icon" variant="outline">
+                <Button className='rounded-lg' size="icon" variant="outline">
                   <UserPlus />
                 </Button>
             </DialogTrigger>
@@ -62,29 +63,29 @@ const AddFriendDialog = () => {
         </Tooltip>
         <DialogContent>
             <DialogHeader>
-                <DialogTitle>Add a Friend</DialogTitle>
-                <DialogDescription>
+                <DialogTitle className='font-black text-xl'>Add a Friend</DialogTitle>
+                <DialogDescription className='text-gray-500'>
                     Send a request to connect with your friend!
                 </DialogDescription>
             </DialogHeader>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(handleSubmit)}
-                className='space-y-8'>
+                className='space-y-6'>
                     <FormField control={form.control} name="email"
                     render={({field}) => (
                         <FormField control={form.control} name="email" render={({field}) => (
-                            <FormItem>
-                                <FormLabel>Email</FormLabel>
+                            <FormItem> 
+                                {/* <FormLabel className='p-2'>Email</FormLabel> */}
                                 <FormControl>
-                                    <Input placeholder='Email...' {...field} />
+                                    <Input className='rounded-xl h-10' placeholder='Email...' {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )} />
                     )} />
                     <DialogFooter>
-                        <Button disabled={pending}
-                        type="submit">Send</Button>
+                        <Button className='rounded-xl' disabled={pending}
+                        type="submit">Send<Send className='stroke-3' /></Button>
                     </DialogFooter>
                 </form>
             </Form>
