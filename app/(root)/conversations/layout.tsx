@@ -1,7 +1,6 @@
 "use client"
 
 import React, { Children } from 'react'
-import SidebarWrapper from '@/components/shared/sidebar/SidebarWrapper';
 import ItemList from '@/components/shared/item-list/ItemList';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
@@ -22,16 +21,17 @@ const ConversationsLayout = ({children} : Props) => {
         (<p className='w-full h-full flex item-center justify-center'>
           No conversations found
         </p>
-      ) : conversations.map((conversations) => {
-        return conversations.conversation.isGroup ? 
-        null : (
-          <DMConversationItem 
-            key={conversations.conversation._id} 
-            id={conversations.conversation._id}
-            username={conversations.otherMember?.username || ''}
-            imageUrl={conversations.otherMember?.imageUrl || ''}>
-          </DMConversationItem>
-        ) 
+      ) : conversations.map((c) => {
+  if (!c || !c.conversation) return null; // skip null or invalid entries
+
+  return c.conversation.isGroup ? null : (
+    <DMConversationItem
+      key={c.conversation._id}
+      id={c.conversation._id}
+      username={c.otherMember?.username || ''}
+      imageUrl={c.otherMember?.imageUrl || ''}
+    />
+  ); 
       })
     ) : (
       <Loader2 />

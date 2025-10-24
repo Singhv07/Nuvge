@@ -27,12 +27,18 @@ handler: async (ctx, args) => {
 
     const conversations = (
   await Promise.all(
-    conversationMembership?.map(async (membership) => {
-      const conversation = await ctx.db.get(membership.conversationId);
-      return conversation || null; // return null if missing
+    conversationMembership.map(async (membership) => {
+      try {
+        const conversation = await ctx.db.get(membership.conversationId);
+        if (!conversation) return null; // skip deleted
+        return conversation;
+      } catch {
+        return null;
+      }
     })
   )
-).filter(Boolean); // remove any null (deleted) conversations
+).filter(Boolean);
+
 
 
     const conversationWithDetails = await Promise.all(
@@ -62,9 +68,6 @@ handler: async (ctx, args) => {
   })
 );
 
-return conversationWithDetails.filter(Boolean); // filter out nulls
-
-     
-    return conversationWithDetails   
+return conversationWithDetails.filter(Boolean); // filter out nulls 
 
 }})
