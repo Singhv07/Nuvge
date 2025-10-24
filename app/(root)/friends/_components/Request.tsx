@@ -37,7 +37,7 @@ const Request = ({ id, imageUrl, username, email}: Props) => {
                 <p className="text-xs text-muted-foreground truncate text-gray-500">{email}</p>
             </div>
         </div>
-        <div className='flex items-center gap-2'>
+        <div className='flex items-center gap-3'>
             <Button 
                 size='icon' 
                 disabled={denyPending} 
