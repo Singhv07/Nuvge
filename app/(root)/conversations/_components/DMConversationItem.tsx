@@ -15,7 +15,7 @@ type Props = {
 const DMConversationItem = ({id, imageUrl, username}: Props) => {
   return (
     <Link href={`/conversations/${id}`} className='w-full'>
-        <Card className='p-2 flex flex-row items-center gap-4 truncate rounded-full'>
+        <Card className='p-2 flex flex-row items-center gap-4 truncate rounded-2xl'>
             <div className='flex flex-row items-center gap-4 truncate'>
                 <Avatar>
                     <AvatarImage src={imageUrl} />

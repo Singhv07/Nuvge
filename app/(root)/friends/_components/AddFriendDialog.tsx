@@ -52,7 +52,7 @@ const AddFriendDialog = () => {
         <Tooltip>
             <TooltipTrigger asChild>
             <DialogTrigger asChild>
-                <Button className='rounded-lg' size="icon" variant="outline">
+                <Button className='rounded-2xl w-10 h-10' size="icon" variant="outline">
                   <UserPlus />
                 </Button>
             </DialogTrigger>
@@ -63,7 +63,7 @@ const AddFriendDialog = () => {
         </Tooltip>
         <DialogContent>
             <DialogHeader>
-                <DialogTitle className='font-black text-xl'>Add a Friend</DialogTitle>
+                <DialogTitle className='font-black text-xl text-gray-500'>Add a Friend</DialogTitle>
                 <DialogDescription className='text-gray-500'>
                     Send a request to connect with your friend!
                 </DialogDescription>
