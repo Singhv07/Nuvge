@@ -2,7 +2,7 @@ import { ConvexError, v } from "convex/values";
 import { mutation } from "./_generated/server";
 import { getUserByClerkId } from "./_utils";
 
-export const create = mutation({
+export const remove = mutation({
     args: {
         conversationId: v.id("conversations"),
     },

@@ -9,6 +9,7 @@ import { Loader2 } from "lucide-react";
 import Header from "./_components/Header";
 import Body from "./_components/body/Body";
 import ChatInput from "./_components/input/ChatInput";
+import RemoveFriendDialog from "./_components/dialogs/RemoveFriendDialog";
 
 type Props = {
   params: Promise<{ conversationId: Id<"conversations"> }>;
@@ -44,6 +45,10 @@ const ConversationsPage = ({ params }: Props) => {
 
   return (
     <ConversationContainer>
+      <RemoveFriendDialog 
+        conversationId={conversationId} 
+        open={removeFriendDialogOpen} 
+        setOpen={setRemoveFriendDialogOpen}/>
       <Header
         name={
           conversation.isGroup
