@@ -63,7 +63,7 @@ const AddFriendDialog = () => {
         </Tooltip>
         <DialogContent>
             <DialogHeader>
-                <DialogTitle className='font-black text-xl text-gray-500'>Add a Friend</DialogTitle>
+                <DialogTitle className='font-black text-2xl text-gray-500'>Add a Friend</DialogTitle>
                 <DialogDescription className='text-gray-500'>
                     Send a request to connect with your friend!
                 </DialogDescription>
