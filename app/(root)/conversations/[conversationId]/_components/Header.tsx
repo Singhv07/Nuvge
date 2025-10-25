@@ -25,7 +25,7 @@ const Header = ({ imageUrl, name, options }: Props) => {
         <Link href="/conversations" className="block lg:hidden">
           <ArrowLeft className="w-5 h-5" />
         </Link>
-        <Avatar className="h-8 w-8 mr-2">
+        <Avatar className="h-8 w-8">
           <AvatarImage src={imageUrl} />
           <AvatarFallback>{name?.substring(0, 1)}</AvatarFallback>
         </Avatar>

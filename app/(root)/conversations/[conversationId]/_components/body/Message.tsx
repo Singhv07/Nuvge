@@ -12,6 +12,7 @@ type Props = {
   content: string[]
   createdAt: number
   type: string
+  showTime?: boolean
 }
 
 const Message = ({
@@ -22,6 +23,7 @@ const Message = ({
   content,
   createdAt,
   type,
+  showTime
 }: Props) => {
   const formatTime = (timeStamp: number) => {
     return format(timeStamp, 'HH:mm')
@@ -29,15 +31,15 @@ const Message = ({
 
   return (
     <motion.div
-        className={cn('flex items-end', {
+      className={cn('flex items-end', {
         'justify-end': fromCurrentUser,
-        })}
-        initial={{ opacity: 0, y: 12, scale: 0.98 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{
-            duration: 0.65,
-            ease: [0.25, 0.1, 0.25, 1], // Apple's cubic-bezier curve
-        }}
+      })}
+      initial={{ opacity: 0, y: 12, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{
+        duration: 0.65,
+        ease: [0.25, 0.1, 0.25, 1], 
+      }}
     >
       <div
         className={cn('flex flex-col w-full mx-2', {
@@ -53,19 +55,19 @@ const Message = ({
             'rounded-bl-none': !lastByUser && !fromCurrentUser,
           })}
         >
-          {type === 'text' ? (
-            <p className='text-wrap break-words whitespace-pre-wrap'>
-              {content}
+          {type === 'text' && (
+            <p className="text-wrap break-words whitespace-pre-wrap">{content}</p>
+          )}
+          {showTime && ( 
+            <p
+              className={cn('text-xs flex w-full my-1', {
+                'text-primary-foreground justify-end': fromCurrentUser,
+                'text-secondary-foreground justify-start': !fromCurrentUser,
+              })}
+            >
+              {formatTime(createdAt)}
             </p>
-          ) : null}
-          <p
-            className={cn('text-xs flex w-full my-1', {
-              'text-primary-foreground justify-end': fromCurrentUser,
-              'text-secondary-foreground justify-start': !fromCurrentUser,
-            })}
-          >
-            {formatTime(createdAt)}
-          </p>
+          )}
         </div>
       </div>
       <Avatar
