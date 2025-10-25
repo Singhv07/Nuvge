@@ -1,6 +1,6 @@
 "use client"
 
-import React, { Children } from 'react'
+import Reac from 'react'
 import ItemList from '@/components/shared/item-list/ItemList';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
@@ -30,6 +30,8 @@ const ConversationsLayout = ({children} : Props) => {
       id={c.conversation._id}
       username={c.otherMember?.username || ''}
       imageUrl={c.otherMember?.imageUrl || ''}
+      lastMessageContent={c.lastMessage?.content}
+      lastMessageSender={c.lastMessage?.sender}
     />
   ); 
       })

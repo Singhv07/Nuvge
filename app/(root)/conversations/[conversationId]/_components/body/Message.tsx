@@ -37,7 +37,7 @@ const Message = (
             "order-1 items-end": fromCurrentUser,
             "order-2 items-start": !fromCurrentUser
         })}>
-            <div className={cn("px-4 py-2 rounded-xl max-w-[70%]", {
+            <div className={cn("px-4 py-2 rounded-3xl max-w-[70%]", {
                 "bg-primary text-primary-foreground": fromCurrentUser,
                 "bg-secondary text-secondary-foreground": !fromCurrentUser,
                 "rounded-br-none": !lastByUser && fromCurrentUser,
