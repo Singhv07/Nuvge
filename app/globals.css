@@ -7,6 +7,7 @@ html,
 body {
   height: 100%;
   overflow: auto;
+  overflow-y: hidden;
 }
 
 :root {
@@ -17,7 +18,7 @@ body {
   --card-foreground: oklch(0.141 0.005 285.823);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.141 0.005 285.823);
-  --primary: oklch(0.646 0.222 41.116);
+  --primary: oklch(66.563% 0.21433 38.751);
   --primary-foreground: oklch(0.98 0.016 73.684);
   --secondary: oklch(0.967 0.001 286.375);
   --secondary-foreground: oklch(0.21 0.006 285.885);

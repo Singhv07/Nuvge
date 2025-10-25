@@ -35,12 +35,12 @@ const DesktopNav = () => {
             <li key={id} className="relative">
               <Tooltip>
                 <TooltipTrigger>
-                  <Button asChild className='rounded-lg' size="icon" variant={path.active ? "default" : "outline"}>
+                  <Button asChild className='rounded-lg' size="icon" variant={path.active ? "default" : "ghost"}>
                     <Link href={path.href}>
                       {path.icon}
                     </Link>
                   </Button>
-                  {path.count ? <Badge className='absolute left-7 bottom-6 px-2 rounded-full items-center justify-center bg-gray-500'>
+                  {path.count ? <Badge className='absolute left-7 bottom-6 px-2 rounded-full items-center justify-center bg-slate-700'>
                     {path.count}
                   </Badge>: null}
                 </TooltipTrigger>

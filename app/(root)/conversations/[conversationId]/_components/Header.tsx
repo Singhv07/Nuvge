@@ -20,8 +20,8 @@ type Props = {
 
 const Header = ({ imageUrl, name, options }: Props) => {
   return (
-    <Card className="w-full flex items-center border-1 rounded-2xl p-2 justify-between">
-      <div className="flex flex-row items-center gap-2">
+    <Card className="w-full flex items-center border-1 rounded-2xl p-2 justify-between z-100">
+      <div className="flex flex-row items-center gap-2 ">
         <Link href="/conversations" className="block lg:hidden">
           <ArrowLeft className="w-5 h-5" />
         </Link>

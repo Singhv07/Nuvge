@@ -7,93 +7,120 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { api } from '@/convex/_generated/api'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ConvexError } from 'convex/values'
-import React, { useRef } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import z from 'zod'
 import TextAreaAutosize from 'react-textarea-autosize'
 import { Button } from '@/components/ui/button'
-import { CornerRightUp, SendHorizonal } from 'lucide-react'
-
+import { CornerRightUp } from 'lucide-react'
 
 const chatMessageSchema = z.object({
-    content: z.string().min(1, {
-        message: "This field can't be empty"
-    })
+  content: z.string().min(1, {
+    message: "This field can't be empty"
+  })
 })
 
 const ChatInput = () => {
+  const cardRef = useRef<HTMLDivElement | null>(null)
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null)
+  const { conversationId } = useConversation()
+  const [isFocused, setIsFocused] = useState(false)
 
-    const textareaRef = useRef<HTMLTextAreaElement | null>(null)
-    const {conversationId} = useConversation()
+  const { mutate: createMessage, pending } = useMutationState(api.message.create)
 
-    const { mutate: createMessage, pending} = useMutationState(
-        api.message.create
-    )
+  const form = useForm<z.infer<typeof chatMessageSchema>>({
+    resolver: zodResolver(chatMessageSchema),
+    defaultValues: { content: '' }
+  })
 
-    const form = useForm<z.infer<typeof chatMessageSchema>>({
-        resolver: zodResolver(chatMessageSchema),
-        defaultValues: {
-            content: ''
-        }
-    })
+  const handleInputChange = (event: any) => {
+    const { value, selectionStart } = event.target
+    if (selectionStart !== null) form.setValue("content", value)
+  }
 
-    const handleInputChange = (event: any) => {
-        const {value, selectionStart} = event.target;
+  const handleSubmit = async (values: z.infer<typeof chatMessageSchema>) => {
+    createMessage({
+      conversationId,
+      type: "text",
+      content: [values.content]
+    }).then(() => form.reset())
+      .catch(error => toast.error(
+        error instanceof ConvexError ? error.data : "Unexpected error occurred"
+      ))
+  }
 
-        if(selectionStart !== null) {
-            form.setValue("content", value)
-        }
+  // Detect clicks outside the card to collapse
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (cardRef.current && !cardRef.current.contains(event.target as Node)) {
+        setIsFocused(false)
+      }
     }
 
-    const handleSubmit = async (values: z.infer<typeof chatMessageSchema>) => {
-        createMessage({
-            conversationId,
-            type: "text",
-            content: [values.content]
-        }).then(() => {
-            form.reset();
-        }).catch(error => {
-            toast.error(
-                error instanceof ConvexError 
-                ? error.data 
-                : "Unexpected error occured"
-            )
-        })
-    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   return (
-    <Card className='w-full p-2 rounded-2xl relative'>
-        <div className='flex gap-2 items-end w-full'>
-            <Form {...form}><form onSubmit={form.handleSubmit(handleSubmit)} className='
-            flex gap-2 items-end w-full'>
-                <FormField control={form.control} name='content' render={({field}) => {
-                    return <FormItem className='w-full h-full'>
-                        <FormControl>
-                            <TextAreaAutosize
-                            onKeyDown={async e => {
-                                if(e.key === "Enter" && !e.shiftKey) {
-                                    e.preventDefault()
-                                    await form.handleSubmit(handleSubmit)()
-                                }
-                            }}
-                            rows={1} maxRows={3} {...field} 
-                            onChange={handleInputChange} 
-                            onClick={handleInputChange}
-                            placeholder='Type a message...'
-                            className='min-h-full w-full resize-none 
-                            outline-0 bg-card text-card-foreground 
-                            placeholder:text-muted-foreground ml-2' />
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                }} />
-                <Button disabled={pending} size="icon" type="submit" className='rounded-xl  hover:bg-gray-500'>
-                    <CornerRightUp />
-                </Button>
-                </form>
-            </Form>
-        </div>
+    <Card
+      ref={cardRef}
+      className={`w-full p-2 rounded-2xl relative overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
+      ${isFocused ? 'h-36' : 'h-14'}`}
+    >
+      <div
+        className={`absolute left-0 w-full px-2 pb-2 transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
+        ${isFocused ? 'top-2 -translate-y-0' : 'bottom-0 translate-y-0'}`}
+      >
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="flex gap-2 items-end w-full"
+          >
+            <FormField
+              control={form.control}
+              name="content"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormControl>
+                    <TextAreaAutosize
+                        {...field}
+                        ref={(e) => {
+                            field.ref(e)
+                            textareaRef.current = e
+                        }}
+                        onFocus={() => setIsFocused(true)}
+                        onKeyDown={async (e) => {
+                            if (e.key === "Enter" && !e.shiftKey) {
+                            e.preventDefault()
+                            await form.handleSubmit(handleSubmit)()
+                            }
+                        }}
+                        rows={1}
+                        maxRows={3}
+                        onChange={handleInputChange}
+                        placeholder="Type a message..."
+                        className="w-full resize-none outline-0 bg-card text-card-foreground placeholder:text-muted-foreground ml-2
+                                    transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
+                    />
+
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button
+              disabled={pending}
+              size="icon"
+              type="submit"
+              className={`rounded-xl hover:bg-gray-500 transition-all duration-300
+                ${isFocused ? '-translate-y-0' : 'translate-y-0'}`}
+            >
+              <CornerRightUp />
+            </Button>
+          </form>
+        </Form>
+      </div>
     </Card>
   )
 }

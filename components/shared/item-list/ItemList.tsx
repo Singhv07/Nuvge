@@ -2,7 +2,9 @@
 
 import { useConversation } from '@/app/hooks/useConversation';
 import { Card } from '@/components/ui/card';
+import { PointerHighlight } from '@/components/ui/pointer-highlight';
 import { cn } from '@/lib/utils';
+import { ArrowUp } from 'lucide-react';
 import React from 'react'
 
 type Props = React.PropsWithChildren<
@@ -15,13 +17,17 @@ type Props = React.PropsWithChildren<
 const ItemList = ({children, title, action : Action} : Props) => {
   const {isActive} = useConversation();
   return (
-    <Card className={cn("rounded-3xl hidden h-full w-full lg:flex-none lg:w-90 p-2", {
+    <Card className={cn("rounded-3xl hidden h-full w-full lg:flex-none lg:w-90 p-2 bg-gradient-to-t from-muted to-transparent", {
       "block": !isActive,
       "lg:block": isActive,
     })}>
-      <div className="mb-4 flex justify-between items-center">
+      <div className="mb-2 flex justify-between items-center">
        <h1 className="text-2xl font-black tracking-tight ml-2">{title}</h1>
        {Action ? Action : null}
+      </div>
+      <div className='flex flex-row text-xs font-black text-gray-500 mb-4 ml-2'>
+        Click on a
+        <p className='text-primary ml-1 mr-1 '>conversation</p> to start chatting   
       </div>
       <div className="w-full h-full flex flex-col items-center justify-start gap-2">
         {children}
