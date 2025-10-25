@@ -39,18 +39,18 @@ const RemoveFriendDialog = ({conversationId, open, setOpen}: Props) => {
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className="rounded-2xl">
             <AlertDialogHeader>
-                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                <AlertDialogDescription>This action cannot be undone. 
+                <AlertDialogTitle className='font-black text-gray-500 text-3xl'>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription className='text-gray-500 text-sm'>This action cannot be undone. 
                     All messages will be delete and you will 
                     not be able to message this user. All group chats will still
                     work as normal
                     </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-                <AlertDialogCancel disabled={pending}>Cancel</AlertDialogCancel>
-                <AlertDialogAction disabled={pending} onClick={handleRemoveFriend}>Delete</AlertDialogAction>
+                <AlertDialogCancel disabled={pending} className='rounded-xl'>Cancel</AlertDialogCancel>
+                <AlertDialogAction disabled={pending} onClick={handleRemoveFriend} className='rounded-xl'>Delete</AlertDialogAction>
             </AlertDialogFooter>
         </AlertDialogContent>
     </AlertDialog>

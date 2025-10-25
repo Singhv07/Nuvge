@@ -20,7 +20,7 @@ type Props = {
 
 const Header = ({ imageUrl, name, options }: Props) => {
   return (
-    <Card className="w-full flex items-center border-0 rounded-xl p-2 justify-between">
+    <Card className="w-full flex items-center border-1 rounded-2xl p-2 justify-between">
       <div className="flex flex-row items-center gap-2">
         <Link href="/conversations" className="block lg:hidden">
           <ArrowLeft className="w-5 h-5" />
@@ -33,7 +33,7 @@ const Header = ({ imageUrl, name, options }: Props) => {
       </div>
       <div className="flex gap-2">
         {options ? (<DropdownMenu>
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger asChild>
                 <Button size="icon" variant="secondary" className="rounded-xl">
                     <Bolt />
                 </Button>

@@ -13,7 +13,7 @@ import { toast } from 'sonner'
 import z from 'zod'
 import TextAreaAutosize from 'react-textarea-autosize'
 import { Button } from '@/components/ui/button'
-import { SendHorizonal } from 'lucide-react'
+import { CornerRightUp, SendHorizonal } from 'lucide-react'
 
 
 const chatMessageSchema = z.object({
@@ -88,8 +88,8 @@ const ChatInput = () => {
                         <FormMessage />
                     </FormItem>
                 }} />
-                <Button disabled={pending} size="icon" type="submit" className='rounded-xl'>
-                    <SendHorizonal />
+                <Button disabled={pending} size="icon" type="submit" className='rounded-xl  hover:bg-gray-500'>
+                    <CornerRightUp />
                 </Button>
                 </form>
             </Form>

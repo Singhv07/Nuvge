@@ -22,7 +22,7 @@ const Request = ({ id, imageUrl, username, email}: Props) => {
     const {mutate: acceptRequest, pending: acceptPending} = useMutationState(api.request.accept)
 
   return (
-    <Card className='w-full p-2 flex flex-row item-center justify-between gap-2 rounded-2xl'>
+    <Card className='w-full p-2 flex flex-row item-center justify-between gap-2 rounded-full'>
         <div className='flex items-center gap-4 truncate'>
             <Avatar>
                 <AvatarImage src={imageUrl}/>

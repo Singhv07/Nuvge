@@ -20,7 +20,7 @@ const ItemList = ({children, title, action : Action} : Props) => {
       "lg:block": isActive,
     })}>
       <div className="mb-4 flex justify-between items-center">
-       <h1 className="text-2xl font-black text-gray-500 tracking-tight ml-2">{title}</h1>
+       <h1 className="text-2xl font-black tracking-tight ml-2">{title}</h1>
        {Action ? Action : null}
       </div>
       <div className="w-full h-full flex flex-col items-center justify-start gap-2">

@@ -6,7 +6,7 @@ import React from 'react'
 import { useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import AddFriendDialog from './_components/AddFriendDialog'
-import { Loader2 } from 'lucide-react'
+import { CornerRightUp, Loader2 } from 'lucide-react'
 import Request from "./_components/Request"
 
 type Props = {}
@@ -19,7 +19,10 @@ const FriendsPage = (props: Props) => {
     <>
     <ItemList title="Friends" action={<AddFriendDialog />}>
       {
-        requests ? requests.length === 0 ? <p className='w-full h-full flex item-center justify-center'>No friend requests found</p> : requests.map(request => {
+        requests ? requests.length === 0 ? <p className='w-full h-full flex item-center text-gray-500 justify-end font-black text-2xl p-2'>
+          Click here to add one
+          <CornerRightUp className='stroke-primary'/>
+          </p> : requests.map(request => {
             return <Request 
             key={request.request._id} 
             id={request.request._id} 
