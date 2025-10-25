@@ -63,7 +63,7 @@ const ChatInput = () => {
     }
 
   return (
-    <Card className='w-full p-2 rounded-xl relative'>
+    <Card className='w-full p-2 rounded-2xl relative'>
         <div className='flex gap-2 items-end w-full'>
             <Form {...form}><form onSubmit={form.handleSubmit(handleSubmit)} className='
             flex gap-2 items-end w-full'>
@@ -82,13 +82,13 @@ const ChatInput = () => {
                             onClick={handleInputChange}
                             placeholder='Type a message...'
                             className='min-h-full w-full resize-none 
-                            border-0 outline-0 bg-card text-card-foreground 
-                            placeholder:text-muted-foreground p-1.5' />
+                            outline-0 bg-card text-card-foreground 
+                            placeholder:text-muted-foreground ml-2' />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
                 }} />
-                <Button disabled={pending} size="icon" type="submit">
+                <Button disabled={pending} size="icon" type="submit" className='rounded-xl'>
                     <SendHorizonal />
                 </Button>
                 </form>

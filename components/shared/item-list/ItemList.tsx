@@ -15,12 +15,12 @@ type Props = React.PropsWithChildren<
 const ItemList = ({children, title, action : Action} : Props) => {
   const {isActive} = useConversation();
   return (
-    <Card className={cn("rounded-2xl hidden h-full w-full lg:flex-none lg:w-90 p-2", {
+    <Card className={cn("rounded-3xl hidden h-full w-full lg:flex-none lg:w-90 p-2", {
       "block": !isActive,
       "lg:block": isActive,
     })}>
       <div className="mb-4 flex justify-between items-center">
-       <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+       <h1 className="text-2xl font-black text-gray-500 tracking-tight ml-2">{title}</h1>
        {Action ? Action : null}
       </div>
       <div className="w-full h-full flex flex-col items-center justify-start gap-2">
