@@ -2,7 +2,7 @@
 
 import ConversationContainer from "@/components/shared/conversation/ConversationContainer";
 import { api } from "@/convex/_generated/api";
-import { use } from "react";
+import { use, useState } from "react";
 import { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
 import { Loader2 } from "lucide-react";
@@ -20,6 +20,11 @@ const ConversationsPage = ({ params }: Props) => {
   const { conversationId } = resolvedParams;
 
   const conversation = useQuery(api.conversation.get, { id: conversationId });
+
+  const [removeFriendDialogOpen, setRemoveFriendDialogOpen] = useState(false)
+  const [deleteGroupDialogOpen, setDeleteGroupDialogOpen] = useState(false)
+  const [leaveGroupDialogOpen, setLeaveGroupDialogOpen] = useState(false)
+  const [calltype, setCallType] = useState<"audio" | "video" | null>(null)
 
   if (conversation === undefined) {
     return (
@@ -49,6 +54,26 @@ const ConversationsPage = ({ params }: Props) => {
           conversation.isGroup
             ? undefined
             : conversation.otherMember?.imageUrl
+        }
+        options={
+          conversation.isGroup ? [
+          {
+            label: "Leave group",
+            destructive: false,
+            onClick: () => setLeaveGroupDialogOpen(true),
+          },
+          {
+            label: "Delete group",
+            destructive: true,
+            onClick: () => setDeleteGroupDialogOpen(true),
+          },
+        ] : [
+          {
+            label: "Remove Friend",
+            destructive: true,
+            onClick: () => setRemoveFriendDialogOpen(true),
+          }
+        ]
         }
       />
       <Body />
