@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { ArrowLeft, Bolt } from "lucide-react";
 import React from "react";
-import { DropdownMenu, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { DropdownMenu, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { DropdownMenuContent } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
@@ -34,7 +34,7 @@ const Header = ({ imageUrl, name, options }: Props) => {
       <div className="flex gap-2">
         {options ? (<DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button size="icon" variant="secondary" className="rounded-xl">
+                <Button size="icon" variant="secondary" className="rounded-xl p-2">
                     <Bolt />
                 </Button>
             </DropdownMenuTrigger>
