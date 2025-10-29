@@ -4,16 +4,83 @@ import { useConversation } from '@/app/hooks/useConversation'
 import { api } from '@/convex/_generated/api'
 import { Id } from '@/convex/_generated/dataModel'
 import { useQuery } from 'convex/react'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Message from './Message'
 import { format } from 'date-fns'
+import { useMutationState } from '@/app/hooks/useMutationState'
+import { Tooltip, TooltipContent, TooltipProvider } from '@/components/ui/tooltip'
+import { TooltipTrigger } from '@radix-ui/react-tooltip'
 
-const Body = () => {
+type Props = {
+  members: Array<{
+    lastSeenMessageId?: Id<"messages">;
+    username?: string;
+    imageUrl?: string;
+    [key: string]: any;
+  }>;
+}
+
+const Body = ({ members }: Props) => {
   const { conversationId } = useConversation()
 
   const messages = useQuery(api.messages.get, {
     id: conversationId as Id<"conversations">
   })
+
+  const {mutate: markRed} = useMutationState(api.conversation.markRed)
+
+  useEffect(() => {
+    if(messages && messages.length > 0) {
+      markRed({
+        conversationId: conversationId as Id<"conversations">,
+        messageId: messages[0].message._id
+      })
+    }
+  }, [messages?.length , conversationId, markRed])
+
+  const getSeenMessage = (messageId: Id<"messages">) => {
+    const seenUsers = members.filter((member: any) => member.lastSeenMessageId === messageId)
+    .map((user: any) => user.username!.split(' ')[0])
+
+      if(seenUsers.length === 0) return undefined
+
+      return formatSeenBy(seenUsers)
+  }
+
+  const formatSeenBy = (names: string[]) => {
+    switch(names.length) {
+      case 1: 
+      return <p className='text-muted-foreground text-sm text-right'>
+        {
+          `Seen by ${names[0]}`
+        }
+      </p>
+      case 2:
+        return <p className='text-muted-foreground text-sm text-right'>
+        {
+          `Seen by ${names[0]} and ${names[1]}`
+        }
+        </p> 
+      default:
+        return <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <p className='text-muted-foreground text-sm text-right'>
+                {`Seen by ${names[0]}, ${names[1]} and ${names.length - 2} more`}
+              </p>
+            </TooltipTrigger>
+            <TooltipContent>
+              <ul>
+                {names.map((name, index) => {
+                  return <li key={(index)}>{name}</li>
+                })}
+              </ul>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+    }
+  }
+
 
   return (
     <div className="relative flex-1 w-full flex flex-col-reverse overflow-y-scroll gap-2 p-2 no-scrollbar">
@@ -31,6 +98,9 @@ const Body = () => {
           const lastByUser =
             messages[index - 1]?.message.senderId === messages[index].message.senderId
 
+          const seenMessage = isCurrentUser ? getSeenMessage(message._id) : undefined
+          
+
           return (
             <Message
               key={message._id}
@@ -41,6 +111,7 @@ const Body = () => {
               content={message.content}
               createdAt={message._creationTime}
               type={message.type}
+              seen={seenMessage}
               showTime={showTime}
             />
           )

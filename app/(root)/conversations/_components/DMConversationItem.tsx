@@ -8,7 +8,7 @@ import { PointerHighlight } from '@/components/ui/pointer-highlight'
 
 type Props = {
   id: Id<'conversations'>
-  imageUrl: string
+  imageUrl?: string // Make imageUrl optional
   username: string
   lastMessageSender?: string
   lastMessageContent?: string
@@ -28,7 +28,9 @@ const DMConversationItem = ({
       <Card className="p-2 flex flex-row items-center gap-4 truncate rounded-full hover:bg-muted/60 transition">
         <div className="flex flex-row items-center gap-4 truncate">
           <Avatar>
-            <AvatarImage src={imageUrl} />
+            {imageUrl ? (
+              <AvatarImage src={imageUrl} alt={username} />
+            ) : null}
             <AvatarFallback>
               <User />
             </AvatarFallback>

@@ -75,7 +75,7 @@ const ConversationsPage = ({ params }: Props) => {
           conversation.isGroup
             ? conversation.otherMembers?.map((m) => ({
                 name: m.username,
-                imageUrl: m.imageUrl ?? undefined, // might be undefined, handled safely
+                imageUrl: m.imageUrl, // might be undefined, handled safely
               }))
             : undefined
         }
@@ -104,7 +104,15 @@ const ConversationsPage = ({ params }: Props) => {
       />
 
 
-      <Body />
+      <Body 
+        members={
+          conversation.isGroup
+            ? (conversation.otherMembers || [])
+            : conversation.otherMember 
+              ? [conversation.otherMember] 
+              : []
+        } 
+      />
       <ChatInput />
     </ConversationContainer>
   );
