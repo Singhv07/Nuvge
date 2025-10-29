@@ -74,6 +74,7 @@ handler: async (ctx, args) => {
                 }
 
                 return {
+                    _id: member._id,
                     username: member.username,
                     imageUrl: member.imageUrl,
                     lastSeenMessageId: membership.lastSeenMessage

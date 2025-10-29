@@ -5,6 +5,7 @@ import Link from 'next/link'
 import React from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { PointerHighlight } from '@/components/ui/pointer-highlight'
+import { Badge } from '@/components/ui/badge'
 
 type Props = {
   id: Id<'conversations'>
@@ -13,6 +14,7 @@ type Props = {
   lastMessageSender?: string
   lastMessageContent?: string
   isGroup?: boolean
+  unseenCount? : number
 }
 
 const DMConversationItem = ({
@@ -22,10 +24,11 @@ const DMConversationItem = ({
   lastMessageSender,
   lastMessageContent,
   isGroup = false,
+  unseenCount,
 }: Props) => {
   return (
     <Link href={`/conversations/${id}`} className="w-full">
-      <Card className="p-2 flex flex-row items-center gap-4 truncate rounded-full hover:bg-muted/60 transition">
+      <Card className="p-2 flex flex-row items-center justify-between rounded-full hover:bg-muted/60 transition">
         <div className="flex flex-row items-center gap-4 truncate">
           <Avatar>
             {imageUrl ? (
@@ -56,6 +59,7 @@ const DMConversationItem = ({
             )}
           </div>
         </div>
+        {unseenCount ? <Badge className='rounded-full mr-4'>{unseenCount}</Badge> : null}
       </Card> 
     </Link>
   )

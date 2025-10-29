@@ -57,8 +57,27 @@ handler: async (ctx, args) => {
       const lastMessage = await getLastMessageDetails({ctx, 
         id: conversation.lastMessageId})
 
+      // Find the membership for the current user in this conversation
+      const currentMembership = conversationMemberships.find(
+        membership => membership.memberId === currentUser._id
+      )
+
+      const lastSeenMessage = currentMembership?.lastSeenMessage 
+        ? await ctx.db.get(currentMembership.lastSeenMessage) 
+        : null
+
+      const lastSeenMessageTime = lastSeenMessage ? lastSeenMessage._creationTime : -1
+
+      const unseenMessages = await ctx.db.query("messages")
+      .withIndex("by_conversationId", (q) => q.eq("conversationId", conversation._id))
+      .filter((q) =>
+        q.gt(q.field("_creationTime"), lastSeenMessageTime)
+      ).filter((q) => q.gt(q.field("_creationTime"), lastSeenMessageTime))
+      .filter((q) => q.neq(q.field("senderId"),  currentUser._id))
+      .collect()
+
     if (conversation.isGroup) {
-      return { conversation, lastMessage};
+      return { conversation, lastMessage, unseenCount: unseenMessages.length };
     } else {
       const otherMembership = conversationMemberships.find(
         (membership) => membership.memberId !== currentUser._id
@@ -68,7 +87,7 @@ handler: async (ctx, args) => {
         ? await ctx.db.get(otherMembership.memberId)
         : null;
 
-      return { conversation, otherMember, lastMessage};
+      return { conversation, otherMember, lastMessage, unseenCount: unseenMessages.length };
     }
   })
 );
