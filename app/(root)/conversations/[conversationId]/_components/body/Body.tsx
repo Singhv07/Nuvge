@@ -50,13 +50,13 @@ const Body = ({ members }: Props) => {
   const formatSeenBy = (names: string[]) => {
     switch(names.length) {
       case 1: 
-      return <p className='text-muted-foreground text-sm text-right'>
+      return <p className='text-muted-foreground text-xs p-1 text-slate-500 text-right'>
         {
           `Seen by ${names[0]}`
         }
       </p>
       case 2:
-        return <p className='text-muted-foreground text-sm text-right'>
+        return <p className='text-muted-foreground text-xs p-1 text-slate-500 text-right'>
         {
           `Seen by ${names[0]} and ${names[1]}`
         }
@@ -65,7 +65,7 @@ const Body = ({ members }: Props) => {
         return <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
-              <p className='text-muted-foreground text-sm text-right'>
+              <p className='text-muted-foreground text-xs text-right text-slate-500 p-1'>
                 {`Seen by ${names[0]}, ${names[1]} and ${names.length - 2} more`}
               </p>
             </TooltipTrigger>
