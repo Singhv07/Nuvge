@@ -1,10 +1,9 @@
 import { Card } from '@/components/ui/card'
 import { Id } from '@/convex/_generated/dataModel'
-import { ArrowUp, User } from 'lucide-react'
+import { User } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { PointerHighlight } from '@/components/ui/pointer-highlight'
 import { Badge } from '@/components/ui/badge'
 
 type Props = {

@@ -28,8 +28,8 @@ const createGroupFormSchema = z.object({
 
     const CreateGroupDialog = () => {
 
-        const friends = useQuery(api.friends.get) ?? []
-        console.log("friends:", friends)
+        const friendsQuery = useQuery(api.friends.get)
+        const friends = React.useMemo(() => friendsQuery ?? [], [friendsQuery])
 
         const {mutate: createGroup, pending} = useMutationState(api.conversation.createGroup)
 

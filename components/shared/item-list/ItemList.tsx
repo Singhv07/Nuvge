@@ -2,9 +2,7 @@
 
 import { useConversation } from '@/app/hooks/useConversation';
 import { Card } from '@/components/ui/card';
-import { PointerHighlight } from '@/components/ui/pointer-highlight';
 import { cn } from '@/lib/utils';
-import { ArrowUp } from 'lucide-react';
 import React from 'react'
 
 type Props = React.PropsWithChildren<

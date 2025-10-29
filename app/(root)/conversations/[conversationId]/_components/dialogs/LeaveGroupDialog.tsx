@@ -16,7 +16,7 @@ import { Id } from '@/convex/_generated/dataModel'
 import { ConvexError } from 'convex/values'
 import React, { Dispatch, SetStateAction } from 'react'
 import { toast } from 'sonner'
-import { de } from 'zod/v4/locales'
+
 
 type Props = {
     conversationId : Id<"conversations">
@@ -32,9 +32,8 @@ const LeaveGroupDialog = ({conversationId, open, setOpen}: Props) => {
         leaveGroup({conversationId}).then(() => {
             toast.success("Group left")
         }).catch((error) => {
-            error instanceof ConvexError 
-            ? error.data
-            : "Unexpected error occured" 
+            const msg = error instanceof ConvexError ? error.data : "Unexpected error occured";
+            toast.error(String(msg));
         })
     }
 

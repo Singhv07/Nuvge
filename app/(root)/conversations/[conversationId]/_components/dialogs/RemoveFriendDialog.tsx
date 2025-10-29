@@ -31,9 +31,8 @@ const RemoveFriendDialog = ({conversationId, open, setOpen}: Props) => {
         removeFriend({conversationId}).then(() => {
             toast.success("Removed friend")
         }).catch((error) => {
-            error instanceof ConvexError 
-            ? error.data
-            : "Unexpected error occured" 
+            const msg = error instanceof ConvexError ? error.data : "Unexpected error occured";
+            toast.error(String(msg));
         })
     }
 

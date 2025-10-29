@@ -36,7 +36,7 @@ const Body = ({ members }: Props) => {
         messageId: messages[0].message._id
       })
     }
-  }, [messages?.length , conversationId, markRed])
+  }, [messages, conversationId, markRed])
 
   const getSeenMessage = (messageId: Id<"messages">) => {
     const seenUsers = members.filter((member: any) => member.lastSeenMessageId === messageId)

@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack ",
-    "build": "next build --turbopack",
+    "dev": "next dev --turbopack",
+    "build": "NODE_OPTIONS='--no-deprecation' next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint \"app/**/*.{ts,tsx,js,jsx}\" \"components/**/*.{ts,tsx,js,jsx}\" \"convex/**/*.{ts,tsx,js,jsx}\" --ext .ts,.tsx,.js,.jsx"
   },
   "dependencies": {
     "@clerk/backend": "^2.18.3",

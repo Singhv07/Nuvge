@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { Button } from '@/components/ui/button'
 import { UserPlus } from 'lucide-react'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { useMutationState } from '@/app/hooks/useMutationState'
 import { api } from '@/convex/_generated/api'
@@ -72,17 +72,14 @@ const AddFriendDialog = () => {
                 <form onSubmit={form.handleSubmit(handleSubmit)}
                 className='space-y-6'>
                     <FormField control={form.control} name="email"
-                    render={({field}) => (
-                        <FormField control={form.control} name="email" render={({field}) => (
+                        render={({field}) => (
                             <FormItem> 
-                                {/* <FormLabel className='p-2'>Email</FormLabel> */}
                                 <FormControl>
                                     <Input className='rounded-xl h-10' placeholder='Email...' {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )} />
-                    )} />
                     <DialogFooter>
                         <Button className='rounded-xl' disabled={pending}
                         type="submit">Send<Send className='stroke-3' /></Button>

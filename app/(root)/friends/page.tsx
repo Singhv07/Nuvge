@@ -9,9 +9,7 @@ import AddFriendDialog from './_components/AddFriendDialog'
 import { CornerRightUp, Loader2 } from 'lucide-react'
 import Request from "./_components/Request"
 
-type Props = {}
-
-const FriendsPage = (props: Props) => {
+const FriendsPage = () => {
 
   const requests = useQuery(api.requests.get)
 
