@@ -9,9 +9,7 @@ const ConversationFallback = () => {
     <Card className="hidden text-slate-500 lg:flex flex-col h-full w-full p-8 py-32 justify-left font-black text-9xl rounded-3xl backdrop-blur-md">
       <CornerUpLeft className='w-20 h-20 stroke-1 stroke-primary'/>
           Select a 
-          <PointerHighlight>
             <div className='text-primary'>conversation</div>
-          </PointerHighlight>
            to start chatting...
       {/* <CornerDownLeft className='w-20 h-20 stroke-1' /> */}
       <DottedGlowBackground
