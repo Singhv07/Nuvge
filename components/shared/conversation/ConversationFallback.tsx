@@ -2,7 +2,6 @@ import { Card } from '@/components/ui/card'
 import React from 'react'
 import { CornerUpLeft } from 'lucide-react'
 import DottedGlowBackground from '@/components/ui/dotted-glow-background'
-import { PointerHighlight } from '@/components/ui/pointer-highlight'
 
 const ConversationFallback = () => {
   return (
