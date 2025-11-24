@@ -24,13 +24,22 @@ interface AISuggestionSidebarProps {
         isGroup: boolean;
         participantCount: number;
     };
+    selectedMessage?: {
+        content: string[];
+        senderName: string;
+        timestamp: number;
+        messageId: string;
+    } | null;
+    onClearSelection?: () => void;
 }
 
 const AISuggestionSidebar = ({
     isOpen,
     onClose,
     onPasteToInput,
-    conversationContext
+    conversationContext,
+    selectedMessage,
+    onClearSelection
 }: AISuggestionSidebarProps) => {
     const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
     const [loading, setLoading] = useState(false);
@@ -63,7 +72,8 @@ const AISuggestionSidebar = ({
                 },
                 body: JSON.stringify({
                     messages: formattedMessages,
-                    conversationContext
+                    conversationContext,
+                    selectedMessage: selectedMessage || undefined
                 }),
             });
 
@@ -85,12 +95,23 @@ const AISuggestionSidebar = ({
         }
     };
 
-    // Auto-generate on first open
+    // Auto-generate on first open and when new messages arrive
+    const lastMessageCountRef = React.useRef(0);
+
     React.useEffect(() => {
-        if (isOpen && suggestions.length === 0 && !loading) {
+        if (!isOpen || !messages) return;
+
+        const currentMessageCount = messages.length;
+        const hasNewMessages = currentMessageCount > lastMessageCountRef.current;
+
+        // Generate suggestions if:
+        // 1. Sidebar just opened and no suggestions yet, OR
+        // 2. New messages have arrived
+        if ((suggestions.length === 0 && !loading) || hasNewMessages) {
+            lastMessageCountRef.current = currentMessageCount;
             generateSuggestions();
         }
-    }, [isOpen]);
+    }, [isOpen, messages]);
 
     if (!isOpen) return null;
 
@@ -112,6 +133,32 @@ const AISuggestionSidebar = ({
                         <X className="h-4 w-4" />
                     </Button>
                 </div>
+
+                {/* Selected Message Display */}
+                {selectedMessage && (
+                    <Card className="p-3 bg-muted/50 border-primary/20">
+                        <div className="flex items-start justify-between gap-2">
+                            <div className="flex-1 min-w-0">
+                                <p className="text-xs text-muted-foreground mb-1">Replying to:</p>
+                                <p className="text-sm font-medium truncate">{selectedMessage.senderName}</p>
+                                <p className="text-sm line-clamp-2 text-muted-foreground">
+                                    {selectedMessage.content.join(' ')}
+                                </p>
+                            </div>
+                            {onClearSelection && (
+                                <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="h-6 w-6 flex-shrink-0"
+                                    onClick={onClearSelection}
+                                    title="Clear selection"
+                                >
+                                    <X className="h-3 w-3" />
+                                </Button>
+                            )}
+                        </div>
+                    </Card>
+                )}
 
                 {/* Refresh Button */}
                 <Button
@@ -162,7 +209,7 @@ const AISuggestionSidebar = ({
 
                 {/* Footer Info */}
                 <div className="text-xs text-muted-foreground text-center pt-2 border-t">
-                    Powered by OpenAI GPT-4o-mini
+                    Powered by Google Gemini 1.5 Flash
                 </div>
             </Card>
         </div>

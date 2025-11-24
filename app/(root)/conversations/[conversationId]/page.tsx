@@ -29,8 +29,24 @@ const ConversationsPage = ({ params }: Props) => {
   const [deleteGroupDialogOpen, setDeleteGroupDialogOpen] = useState(false)
   const [leaveGroupDialogOpen, setLeaveGroupDialogOpen] = useState(false)
   const [aiSidebarOpen, setAiSidebarOpen] = useState(false)
+  const [selectedMessage, setSelectedMessage] = useState<{
+    content: string[];
+    senderName: string;
+    timestamp: number;
+    messageId: string;
+  } | null>(null)
 
   const chatInputRef = useRef<ChatInputRef>(null)
+
+  const handleRequestAISuggestion = (messageData: {
+    content: string[];
+    senderName: string;
+    timestamp: number;
+    messageId: string;
+  }) => {
+    setSelectedMessage(messageData)
+    setAiSidebarOpen(true)
+  }
   // Removed unused state for call type
 
   if (conversation === undefined) {
@@ -128,6 +144,7 @@ const ConversationsPage = ({ params }: Props) => {
                   ? [conversation.otherMember]
                   : []
             }
+            onRequestAISuggestion={handleRequestAISuggestion}
           />
           <ChatInput
             ref={chatInputRef}
@@ -138,7 +155,10 @@ const ConversationsPage = ({ params }: Props) => {
 
         <AISuggestionSidebar
           isOpen={aiSidebarOpen}
-          onClose={() => setAiSidebarOpen(false)}
+          onClose={() => {
+            setAiSidebarOpen(false)
+            setSelectedMessage(null)
+          }}
           onPasteToInput={(text) => {
             chatInputRef.current?.setText(text);
           }}
@@ -148,6 +168,8 @@ const ConversationsPage = ({ params }: Props) => {
               ? (conversation.otherMembers?.length || 0) + 1
               : 2
           }}
+          selectedMessage={selectedMessage}
+          onClearSelection={() => setSelectedMessage(null)}
         />
       </div>
     </ConversationContainer>

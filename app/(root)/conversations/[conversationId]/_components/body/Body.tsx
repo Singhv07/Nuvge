@@ -18,19 +18,25 @@ type Props = {
     imageUrl?: string;
     [key: string]: any;
   }>;
+  onRequestAISuggestion?: (messageData: {
+    content: string[];
+    senderName: string;
+    timestamp: number;
+    messageId: string;
+  }) => void;
 }
 
-const Body = ({ members }: Props) => {
+const Body = ({ members, onRequestAISuggestion }: Props) => {
   const { conversationId } = useConversation()
 
   const messages = useQuery(api.messages.get, {
     id: conversationId as Id<"conversations">
   })
 
-  const {mutate: markRed} = useMutationState(api.conversation.markRed)
+  const { mutate: markRed } = useMutationState(api.conversation.markRed)
 
   useEffect(() => {
-    if(messages && messages.length > 0) {
+    if (messages && messages.length > 0) {
       markRed({
         conversationId: conversationId as Id<"conversations">,
         messageId: messages[0].message._id
@@ -40,27 +46,27 @@ const Body = ({ members }: Props) => {
 
   const getSeenMessage = (messageId: Id<"messages">) => {
     const seenUsers = members.filter((member: any) => member.lastSeenMessageId === messageId)
-    .map((user: any) => user.username!.split(' ')[0])
+      .map((user: any) => user.username!.split(' ')[0])
 
-      if(seenUsers.length === 0) return undefined
+    if (seenUsers.length === 0) return undefined
 
-      return formatSeenBy(seenUsers)
+    return formatSeenBy(seenUsers)
   }
 
   const formatSeenBy = (names: string[]) => {
-    switch(names.length) {
-      case 1: 
-      return <p className='text-muted-foreground text-xs p-1 text-slate-500 text-right'>
-        {
-          `Seen by ${names[0]}`
-        }
-      </p>
+    switch (names.length) {
+      case 1:
+        return <p className='text-muted-foreground text-xs p-1 text-slate-500 text-right'>
+          {
+            `Seen by ${names[0]}`
+          }
+        </p>
       case 2:
         return <p className='text-muted-foreground text-xs p-1 text-slate-500 text-right'>
-        {
-          `Seen by ${names[0]} and ${names[1]}`
-        }
-        </p> 
+          {
+            `Seen by ${names[0]} and ${names[1]}`
+          }
+        </p>
       default:
         return <TooltipProvider>
           <Tooltip>
@@ -99,7 +105,7 @@ const Body = ({ members }: Props) => {
             messages[index - 1]?.message.senderId === messages[index].message.senderId
 
           const seenMessage = isCurrentUser ? getSeenMessage(message._id) : undefined
-          
+
 
           return (
             <Message
@@ -113,6 +119,8 @@ const Body = ({ members }: Props) => {
               type={message.type}
               seen={seenMessage}
               showTime={showTime}
+              messageId={message._id}
+              onRequestAISuggestion={onRequestAISuggestion}
             />
           )
         })}
