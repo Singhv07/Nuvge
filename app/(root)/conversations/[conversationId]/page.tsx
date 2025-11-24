@@ -2,16 +2,17 @@
 
 import ConversationContainer from "@/components/shared/conversation/ConversationContainer";
 import { api } from "@/convex/_generated/api";
-import { use, useState } from "react";
+import { use, useState, useRef } from "react";
 import { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
 import { Loader2 } from "lucide-react";
 import Header from "./_components/Header";
 import Body from "./_components/body/Body";
-import ChatInput from "./_components/input/ChatInput";
+import ChatInput, { ChatInputRef } from "./_components/input/ChatInput";
 import RemoveFriendDialog from "./_components/dialogs/RemoveFriendDialog";
 import DeleteGroupDialog from "./_components/dialogs/DeleteGroupDialog";
 import LeaveGroupDialog from "./_components/dialogs/LeaveGroupDialog";
+import AISuggestionSidebar from "./_components/AISuggestionSidebar";
 
 type Props = {
   params: Promise<{ conversationId: Id<"conversations"> }>;
@@ -27,6 +28,9 @@ const ConversationsPage = ({ params }: Props) => {
   const [removeFriendDialogOpen, setRemoveFriendDialogOpen] = useState(false)
   const [deleteGroupDialogOpen, setDeleteGroupDialogOpen] = useState(false)
   const [leaveGroupDialogOpen, setLeaveGroupDialogOpen] = useState(false)
+  const [aiSidebarOpen, setAiSidebarOpen] = useState(false)
+
+  const chatInputRef = useRef<ChatInputRef>(null)
   // Removed unused state for call type
 
   if (conversation === undefined) {
@@ -47,18 +51,18 @@ const ConversationsPage = ({ params }: Props) => {
 
   return (
     <ConversationContainer>
-      <RemoveFriendDialog 
-        conversationId={conversationId} 
-        open={removeFriendDialogOpen} 
-        setOpen={setRemoveFriendDialogOpen}/>
-        <LeaveGroupDialog
-        conversationId={conversationId} 
-        open={leaveGroupDialogOpen} 
-        setOpen={setLeaveGroupDialogOpen}/>
-      <DeleteGroupDialog 
-        conversationId={conversationId} 
-        open={deleteGroupDialogOpen} 
-        setOpen={setDeleteGroupDialogOpen}/>
+      <RemoveFriendDialog
+        conversationId={conversationId}
+        open={removeFriendDialogOpen}
+        setOpen={setRemoveFriendDialogOpen} />
+      <LeaveGroupDialog
+        conversationId={conversationId}
+        open={leaveGroupDialogOpen}
+        setOpen={setLeaveGroupDialogOpen} />
+      <DeleteGroupDialog
+        conversationId={conversationId}
+        open={deleteGroupDialogOpen}
+        setOpen={setDeleteGroupDialogOpen} />
       <Header
         isGroup={conversation.isGroup}
         name={
@@ -74,46 +78,74 @@ const ConversationsPage = ({ params }: Props) => {
         members={
           conversation.isGroup
             ? conversation.otherMembers?.map((m) => ({
-                name: m.username,
-                imageUrl: m.imageUrl, // might be undefined, handled safely
-              }))
+              name: m.username,
+              imageUrl: m.imageUrl, // might be undefined, handled safely
+            }))
             : undefined
         }
         options={
           conversation.isGroup
             ? [
-                {
-                  label: "Leave group",
-                  destructive: false,
-                  onClick: () => setLeaveGroupDialogOpen(true),
-                },
-                {
-                  label: "Delete group",
-                  destructive: true,
-                  onClick: () => setDeleteGroupDialogOpen(true),
-                },
-              ]
+              {
+                label: aiSidebarOpen ? "Hide AI Suggestions" : "Show AI Suggestions",
+                destructive: false,
+                onClick: () => setAiSidebarOpen(!aiSidebarOpen),
+              },
+              {
+                label: "Leave group",
+                destructive: false,
+                onClick: () => setLeaveGroupDialogOpen(true),
+              },
+              {
+                label: "Delete group",
+                destructive: true,
+                onClick: () => setDeleteGroupDialogOpen(true),
+              },
+            ]
             : [
-                {
-                  label: "Remove Friend",
-                  destructive: true,
-                  onClick: () => setRemoveFriendDialogOpen(true),
-                },
-              ]
+              {
+                label: aiSidebarOpen ? "Hide AI Suggestions" : "Show AI Suggestions",
+                destructive: false,
+                onClick: () => setAiSidebarOpen(!aiSidebarOpen),
+              },
+              {
+                label: "Remove Friend",
+                destructive: true,
+                onClick: () => setRemoveFriendDialogOpen(true),
+              },
+            ]
         }
       />
 
 
-      <Body 
-        members={
-          conversation.isGroup
-            ? (conversation.otherMembers || [])
-            : conversation.otherMember 
-              ? [conversation.otherMember] 
-              : []
-        } 
-      />
-      <ChatInput />
+      <div className="flex-1 flex gap-2 overflow-hidden">
+        <div className="flex-1 flex flex-col gap-2 overflow-hidden">
+          <Body
+            members={
+              conversation.isGroup
+                ? (conversation.otherMembers || [])
+                : conversation.otherMember
+                  ? [conversation.otherMember]
+                  : []
+            }
+          />
+          <ChatInput ref={chatInputRef} />
+        </div>
+
+        <AISuggestionSidebar
+          isOpen={aiSidebarOpen}
+          onClose={() => setAiSidebarOpen(false)}
+          onPasteToInput={(text) => {
+            chatInputRef.current?.setText(text);
+          }}
+          conversationContext={{
+            isGroup: conversation.isGroup,
+            participantCount: conversation.isGroup
+              ? (conversation.otherMembers?.length || 0) + 1
+              : 2
+          }}
+        />
+      </div>
     </ConversationContainer>
   );
 };

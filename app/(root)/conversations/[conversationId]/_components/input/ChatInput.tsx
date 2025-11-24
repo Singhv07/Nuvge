@@ -7,7 +7,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { api } from '@/convex/_generated/api'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ConvexError } from 'convex/values'
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import z from 'zod'
@@ -21,7 +21,11 @@ const chatMessageSchema = z.object({
   })
 })
 
-const ChatInput = () => {
+export interface ChatInputRef {
+  setText: (text: string) => void;
+}
+
+const ChatInput = forwardRef<ChatInputRef>((props, ref) => {
   const cardRef = useRef<HTMLDivElement | null>(null)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
   const { conversationId } = useConversation()
@@ -62,6 +66,18 @@ const ChatInput = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
+  // Expose setText method to parent components
+  useImperativeHandle(ref, () => ({
+    setText: (text: string) => {
+      form.setValue('content', text);
+      setIsFocused(true);
+      // Focus the textarea after a short delay
+      setTimeout(() => {
+        textareaRef.current?.focus();
+      }, 100);
+    }
+  }));
+
   return (
     <Card
       ref={cardRef}
@@ -84,23 +100,23 @@ const ChatInput = () => {
                 <FormItem className="w-full">
                   <FormControl>
                     <TextAreaAutosize
-                        {...field}
-                        ref={(e) => {
-                            field.ref(e)
-                            textareaRef.current = e
-                        }}
-                        onFocus={() => setIsFocused(true)}
-                        onKeyDown={async (e) => {
-                            if (e.key === "Enter" && !e.shiftKey) {
-                            e.preventDefault()
-                            await form.handleSubmit(handleSubmit)()
-                            }
-                        }}
-                        rows={1}
-                        maxRows={3}
-                        onChange={handleInputChange}
-                        placeholder="Type a message..."
-                        className="w-full resize-none outline-0 bg-card text-card-foreground placeholder:text-muted-foreground ml-2
+                      {...field}
+                      ref={(e) => {
+                        field.ref(e)
+                        textareaRef.current = e
+                      }}
+                      onFocus={() => setIsFocused(true)}
+                      onKeyDown={async (e) => {
+                        if (e.key === "Enter" && !e.shiftKey) {
+                          e.preventDefault()
+                          await form.handleSubmit(handleSubmit)()
+                        }
+                      }}
+                      rows={1}
+                      maxRows={3}
+                      onChange={handleInputChange}
+                      placeholder="Type a message..."
+                      className="w-full resize-none outline-0 bg-card text-card-foreground placeholder:text-muted-foreground ml-2
                                     transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
                     />
                   </FormControl>
@@ -122,6 +138,8 @@ const ChatInput = () => {
       </div>
     </Card>
   )
-}
+})
+
+ChatInput.displayName = 'ChatInput'
 
 export default ChatInput
