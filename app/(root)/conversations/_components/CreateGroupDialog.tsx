@@ -98,7 +98,7 @@ const createGroupFormSchema = z.object({
                                     <DropdownMenuTrigger asChild disabled={unselectedFriends.length === 0}>
                                         <Button className='w-full rounded-xl' variant='outline'>Select</Button>
                                     </DropdownMenuTrigger>
-                                    <DropdownMenuContent className='w-full max-h-60 backdrop-blur-md overflow-y-auto rounded-2xl no-scrollbar'>
+                                    <DropdownMenuContent className='w-full max-h-60 backdrop-blur-2xl overflow-y-auto rounded-4xl no-scrollbar mt-2'>
                                         {
                                             unselectedFriends.map((friend : any) => {
                                                 return <DropdownMenuCheckboxItem 
