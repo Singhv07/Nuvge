@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Copy, Check } from 'lucide-react';
+import { Copy, Check, CornerDownLeft } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface SuggestionCardProps {
@@ -54,14 +54,15 @@ const SuggestionCard = ({ text, tone, onPaste }: SuggestionCardProps) => {
                     {text}
                 </p>
 
-                <Button
-                    onClick={handlePaste}
-                    className="w-full rounded-xl bg-primary hover:bg-primary/90 transition-all duration-300"
-                    size="sm"
-                >
-                    Paste to Input
-                </Button>
+
             </div>
+            <Button
+                onClick={handlePaste}
+                className="mt-4 rounded-xl bg-primary hover:bg-primary/90 transition-all duration-300"
+
+            >
+                <CornerDownLeft />
+            </Button>
         </Card>
     );
 };

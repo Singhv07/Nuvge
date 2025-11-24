@@ -129,7 +129,11 @@ const ConversationsPage = ({ params }: Props) => {
                   : []
             }
           />
-          <ChatInput ref={chatInputRef} />
+          <ChatInput
+            ref={chatInputRef}
+            onToggleAI={() => setAiSidebarOpen(!aiSidebarOpen)}
+            isAIOpen={aiSidebarOpen}
+          />
         </div>
 
         <AISuggestionSidebar

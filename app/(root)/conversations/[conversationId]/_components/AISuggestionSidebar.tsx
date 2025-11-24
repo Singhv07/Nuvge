@@ -95,8 +95,8 @@ const AISuggestionSidebar = ({
     if (!isOpen) return null;
 
     return (
-        <div className="h-full w-80 flex-shrink-0 relative">
-            <Card className="h-full rounded-3xl backdrop-blur-md p-4 flex flex-col gap-4 border-l">
+        <div className="h-full w-100 flex-shrink-0 relative z-100">
+            <Card className="h-full rounded-2xl backdrop-blur-md p-4 flex flex-col gap-4 border-l">
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -118,7 +118,7 @@ const AISuggestionSidebar = ({
                     onClick={generateSuggestions}
                     disabled={loading}
                     variant="outline"
-                    className="w-full rounded-xl"
+                    className="w-full rounded-xl p-6"
                     size="sm"
                 >
                     {loading ? (
@@ -128,7 +128,7 @@ const AISuggestionSidebar = ({
                         </>
                     ) : (
                         <>
-                            <RefreshCw className="h-4 w-4 mr-2" />
+                            <RefreshCw className="h-4 w-4 mr-2 p-4" />
                             Generate New Suggestions
                         </>
                     )}
@@ -162,7 +162,7 @@ const AISuggestionSidebar = ({
 
                 {/* Footer Info */}
                 <div className="text-xs text-muted-foreground text-center pt-2 border-t">
-                    Powered by OpenAI GPT-4
+                    Powered by OpenAI GPT-4o-mini
                 </div>
             </Card>
         </div>

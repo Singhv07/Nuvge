@@ -2,7 +2,8 @@ import { openai } from '@ai-sdk/openai';
 import { streamText } from 'ai';
 import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = 'edge';
+// Removed edge runtime to ensure environment variables are accessible
+// export const runtime = 'edge';
 
 interface Message {
     senderName: string;
@@ -13,6 +14,19 @@ interface Message {
 
 export async function POST(req: NextRequest) {
     try {
+        // Check for API key first
+        const apiKey = process.env.OPENAI_API_KEY;
+
+        if (!apiKey) {
+            console.error('OPENAI_API_KEY is not set in environment variables');
+            return NextResponse.json(
+                { error: 'OpenAI API key is not configured. Please add OPENAI_API_KEY to your .env.local file.' },
+                { status: 500 }
+            );
+        }
+
+        console.log('API Key found, length:', apiKey.length);
+
         const { messages, conversationContext } = await req.json();
 
         if (!messages || !Array.isArray(messages)) {
@@ -65,6 +79,8 @@ ${conversationHistory}
 Provide 2-3 contextually relevant reply suggestions in JSON format.`;
 
         // Generate suggestions using Vercel AI SDK
+        console.log('Sending request to OpenAI with conversation history:', conversationHistory.substring(0, 200) + '...');
+
         const result = await streamText({
             model: openai('gpt-4o-mini'),
             system: systemPrompt,
@@ -78,6 +94,8 @@ Provide 2-3 contextually relevant reply suggestions in JSON format.`;
             fullText += chunk;
         }
 
+        console.log('OpenAI response:', fullText);
+
         // Parse the JSON response
         let suggestions;
         try {
@@ -85,20 +103,27 @@ Provide 2-3 contextually relevant reply suggestions in JSON format.`;
             const jsonMatch = fullText.match(/```json\n?([\s\S]*?)\n?```/) || fullText.match(/\[[\s\S]*\]/);
             const jsonText = jsonMatch ? (jsonMatch[1] || jsonMatch[0]) : fullText;
             suggestions = JSON.parse(jsonText.trim());
+            console.log('Successfully parsed suggestions:', suggestions);
         } catch (parseError) {
             console.error('Failed to parse AI response:', fullText);
+            console.error('Parse error:', parseError);
             // Fallback suggestions
             suggestions = [
                 { text: "Thank you for your message. I'll get back to you shortly.", tone: "Professional" },
                 { text: "Noted, thanks for the update!", tone: "Friendly" },
             ];
+            console.log('Using fallback suggestions');
         }
 
         return NextResponse.json({ suggestions });
     } catch (error) {
         console.error('Error generating AI suggestions:', error);
+        console.error('Error details:', error instanceof Error ? error.message : 'Unknown error');
         return NextResponse.json(
-            { error: 'Failed to generate suggestions. Please try again.' },
+            {
+                error: 'Failed to generate suggestions. Please try again.',
+                details: error instanceof Error ? error.message : 'Unknown error'
+            },
             { status: 500 }
         );
     }

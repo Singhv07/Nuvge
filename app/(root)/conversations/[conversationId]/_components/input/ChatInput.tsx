@@ -13,7 +13,7 @@ import { toast } from 'sonner'
 import z from 'zod'
 import TextAreaAutosize from 'react-textarea-autosize'
 import { Button } from '@/components/ui/button'
-import { CornerRightUp } from 'lucide-react'
+import { CornerRightUp, Sparkles } from 'lucide-react'
 
 const chatMessageSchema = z.object({
   content: z.string().min(1, {
@@ -25,7 +25,12 @@ export interface ChatInputRef {
   setText: (text: string) => void;
 }
 
-const ChatInput = forwardRef<ChatInputRef>((props, ref) => {
+interface ChatInputProps {
+  onToggleAI?: () => void;
+  isAIOpen?: boolean;
+}
+
+const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(({ onToggleAI, isAIOpen }, ref) => {
   const cardRef = useRef<HTMLDivElement | null>(null)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
   const { conversationId } = useConversation()
@@ -93,6 +98,20 @@ const ChatInput = forwardRef<ChatInputRef>((props, ref) => {
             onSubmit={form.handleSubmit(handleSubmit)}
             className="flex gap-2 items-end w-full"
           >
+            {/* AI Suggestion Toggle Button */}
+            <Button
+              type="button"
+              size="icon"
+              variant="ghost"
+              onClick={onToggleAI}
+              className={`rounded-xl transition-all duration-300 flex-shrink-0
+                ${isAIOpen ? 'bg-primary/10 text-primary hover:bg-primary/20' : 'hover:bg-gray-500/10'}
+                ${isFocused ? '-translate-y-0' : 'translate-y-0'}`}
+              title={isAIOpen ? "Hide AI Suggestions" : "Show AI Suggestions"}
+            >
+              <Sparkles className={`h-5 w-5 ${isAIOpen ? 'fill-primary' : ''}`} />
+            </Button>
+
             <FormField
               control={form.control}
               name="content"
@@ -128,7 +147,7 @@ const ChatInput = forwardRef<ChatInputRef>((props, ref) => {
               disabled={pending}
               size="icon"
               type="submit"
-              className={`rounded-xl hover:bg-gray-500 transition-all duration-300
+              className={`rounded-xl hover:bg-gray-500 transition-all duration-300 flex-shrink-0
                 ${isFocused ? '-translate-y-0' : 'translate-y-0'}`}
             >
               <CornerRightUp />
