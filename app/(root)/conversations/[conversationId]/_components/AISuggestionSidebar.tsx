@@ -122,7 +122,7 @@ const AISuggestionSidebar = ({
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         <Sparkles className="h-5 w-5 text-primary" />
-                        <h3 className="font-semibold text-lg">AI Suggestions</h3>
+                        <h3 className="font-black text-slate-500 text-lg">AI Suggestions</h3>
                     </div>
                     <Button
                         variant="ghost"
@@ -201,7 +201,7 @@ const AISuggestionSidebar = ({
                         <div className="flex flex-col items-center justify-center h-full gap-3 text-muted-foreground">
                             <Sparkles className="h-12 w-12 opacity-50" />
                             <p className="text-sm text-center">
-                                Click "Generate New Suggestions" to get AI-powered reply ideas
+                                Click &quot;Generate New Suggestions&quot; to get AI-powered reply ideas
                             </p>
                         </div>
                     )}
@@ -209,7 +209,7 @@ const AISuggestionSidebar = ({
 
                 {/* Footer Info */}
                 <div className="text-xs text-muted-foreground text-center pt-2 border-t">
-                    Powered by Google Gemini 1.5 Flash
+                    Powered by Google Gemini 2.5 Flash
                 </div>
             </Card>
         </div>

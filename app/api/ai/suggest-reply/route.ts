@@ -63,29 +63,29 @@ export async function POST(req: NextRequest) {
         // Create the prompt - modified based on whether a specific message is selected
         let prompt = `You are a professional corporate communication assistant. Your task is to suggest appropriate, professional replies based on the conversation context.
 
-Guidelines:
-- Maintain a professional and courteous tone suitable for corporate communication
-- Be concise and clear
-- Consider the conversation context and flow
-- Provide 2-3 different reply options with varying tones (formal, friendly-professional, brief)
-- Each suggestion should be a complete, ready-to-send message
-- Adapt to the conversation style while maintaining professionalism
-${isGroupChat ? `- This is a group conversation with ${participantCount} participants` : '- This is a one-to-one conversation'}
+            Guidelines:
+            - Maintain a professional and courteous tone suitable for corporate communication
+            - Be concise and clear
+            - Consider the conversation context and flow
+            - Provide 2-3 different reply options with varying tones (formal, friendly-professional, brief)
+            - Each suggestion should be a complete, ready-to-send message
+            - Adapt to the conversation style while maintaining professionalism
+            ${isGroupChat ? `- This is a group conversation with ${participantCount} participants` : '- This is a one-to-one conversation'}
 
-CRITICAL: You MUST respond with ONLY a valid JSON array. Do not include any explanatory text, markdown formatting, or code blocks. Just the raw JSON array.
+            CRITICAL: You MUST respond with ONLY a valid JSON array. Do not include any explanatory text, markdown formatting, or code blocks. Just the raw JSON array.
 
-Format your response as a JSON array of suggestion objects, each with:
-- "text": the suggested reply message
-- "tone": brief description of the tone (e.g., "Formal", "Friendly", "Brief")
+            Format your response as a JSON array of suggestion objects, each with:
+            - "text": the suggested reply message
+            - "tone": brief description of the tone (e.g., "Formal", "Friendly", "Brief")
 
-Example format (respond with ONLY this structure, no other text):
-[
-  {"text": "Thank you for the update. I'll review this and get back to you by end of day.", "tone": "Formal"},
-  {"text": "Got it, thanks! I'll take a look and circle back soon.", "tone": "Friendly"},
-  {"text": "Acknowledged. Will respond shortly.", "tone": "Brief"}
-]
+            Example format (respond with ONLY this structure, no other text):
+            [
+            {"text": "Thank you for the update. I'll review this and get back to you by end of day.", "tone": "Formal"},
+            {"text": "Got it, thanks! I'll take a look and circle back soon.", "tone": "Friendly"},
+            {"text": "Acknowledged. Will respond shortly.", "tone": "Brief"}
+            ]
 
-`;
+            `;
 
         // Add context based on whether a specific message is selected
         if (selectedMessage) {
