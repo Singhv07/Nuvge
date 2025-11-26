@@ -173,14 +173,16 @@ Respond with ONLY a JSON array of 2-3 contextually relevant reply suggestions. N
         return NextResponse.json({ suggestions });
     } catch (error) {
         console.error('❌ Error generating AI suggestions:', error);
-        console.error('Error details:', error instanceof Error ? error.message : 'Unknown error');
+        const errMsg = error instanceof Error ? error.message : 'Unknown error';
+        console.error('Error details:', errMsg);
 
-        // Return fallback suggestions on error
+        // Return fallback suggestions on error and include server error message for client visibility
         return NextResponse.json({
+            error: errMsg,
             suggestions: [
                 { text: "Thank you for your message. I'll get back to you shortly.", tone: "Professional" },
                 { text: "Noted, thanks for the update!", tone: "Friendly" },
             ]
-        });
+        }, { status: 500 });
     }
 }

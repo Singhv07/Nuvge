@@ -78,7 +78,15 @@ const AISuggestionSidebar = ({
             });
 
             if (!response.ok) {
-                throw new Error('Failed to generate suggestions');
+                // Try to get server-provided error message for better debugging
+                let errBody = null
+                try {
+                    errBody = await response.json()
+                } catch (e) {
+                    // ignore JSON parse errors
+                }
+                const errMsg = errBody?.error || 'Failed to generate suggestions'
+                throw new Error(errMsg)
             }
 
             const data = await response.json();
@@ -89,7 +97,8 @@ const AISuggestionSidebar = ({
             }
         } catch (error) {
             console.error('Error generating suggestions:', error);
-            toast.error('Failed to generate suggestions. Please check your API key.');
+            const msg = error instanceof Error ? error.message : 'Failed to generate suggestions';
+            toast.error(msg);
         } finally {
             setLoading(false);
         }
