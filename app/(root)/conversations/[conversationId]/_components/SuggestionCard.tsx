@@ -30,7 +30,7 @@ const SuggestionCard = ({ text, tone, onPaste }: SuggestionCardProps) => {
     };
 
     return (
-        <Card className="p-4 rounded-2xl backdrop-blur-md hover:shadow-lg transition-all duration-300 border border-border/50">
+        <Card className="p-4 rounded-2xl backdrop-blur-md transition-all duration-300 border hover:border-primary/40 group relative">
             <div className="flex flex-col gap-3">
                 <div className="flex items-center justify-between">
                     <span className="text-xs font-medium text-muted-foreground bg-primary/10 px-2 py-1 rounded-lg">
@@ -40,7 +40,7 @@ const SuggestionCard = ({ text, tone, onPaste }: SuggestionCardProps) => {
                         variant="ghost"
                         size="icon"
                         onClick={handleCopy}
-                        className="h-7 w-7 hover:bg-primary/10"
+                        className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none group-hover:pointer-events-auto"
                     >
                         {copied ? (
                             <Check className="h-4 w-4 text-green-500" />
@@ -50,7 +50,7 @@ const SuggestionCard = ({ text, tone, onPaste }: SuggestionCardProps) => {
                     </Button>
                 </div>
 
-                <p className="text-sm text-foreground leading-relaxed">
+                <p className="text-md text-foreground leading-relaxed">
                     {text}
                 </p>
 
@@ -58,7 +58,7 @@ const SuggestionCard = ({ text, tone, onPaste }: SuggestionCardProps) => {
             </div>
             <Button
                 onClick={handlePaste}
-                className="mt-4 rounded-xl bg-primary hover:bg-primary/90 transition-all duration-300"
+                className="mt-4 rounded-xl bg-slate-500 hover:bg-primary transition-all duration-300"
 
             >
                 <CornerDownLeft />

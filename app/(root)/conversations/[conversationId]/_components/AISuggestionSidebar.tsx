@@ -1,15 +1,16 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useState, forwardRef, useImperativeHandle } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Sparkles, X, RefreshCw, Loader2 } from 'lucide-react';
+import { Sparkles, X, RefreshCw, Loader2, ChevronRight } from 'lucide-react';
 import SuggestionCard from './SuggestionCard';
 import { useConversation } from '@/app/hooks/useConversation';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Id } from '@/convex/_generated/dataModel';
 import { toast } from 'sonner';
+import Image from 'next/image';
 
 interface Suggestion {
     text: string;
@@ -33,14 +34,23 @@ interface AISuggestionSidebarProps {
     onClearSelection?: () => void;
 }
 
-const AISuggestionSidebar = ({
+export interface AISuggestionSidebarRef {
+    generateSuggestionsForMessage: (messageData: {
+        content: string[];
+        senderName: string;
+        timestamp: number;
+        messageId: string;
+    }, conversationContext?: { isGroup: boolean; participantCount: number }) => Promise<void>;
+}
+
+const AISuggestionSidebar = forwardRef<AISuggestionSidebarRef, AISuggestionSidebarProps>(({
     isOpen,
     onClose,
     onPasteToInput,
     conversationContext,
     selectedMessage,
     onClearSelection
-}: AISuggestionSidebarProps) => {
+}, ref) => {
     const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
     const [loading, setLoading] = useState(false);
     const { conversationId } = useConversation();
@@ -49,7 +59,15 @@ const AISuggestionSidebar = ({
         id: conversationId as Id<"conversations">
     });
 
-    const generateSuggestions = async () => {
+    const generateSuggestions = async (
+        messageData?: {
+            content: string[];
+            senderName: string;
+            timestamp: number;
+            messageId: string;
+        },
+        context?: { isGroup: boolean; participantCount: number }
+    ) => {
         if (!messages || messages.length === 0) {
             toast.error('No messages to analyze');
             return;
@@ -72,8 +90,8 @@ const AISuggestionSidebar = ({
                 },
                 body: JSON.stringify({
                     messages: formattedMessages,
-                    conversationContext,
-                    selectedMessage: selectedMessage || undefined
+                    conversationContext: context || conversationContext,
+                    selectedMessage: messageData || selectedMessage || undefined
                 }),
             });
 
@@ -104,6 +122,13 @@ const AISuggestionSidebar = ({
         }
     };
 
+    // Expose method to parent component
+    useImperativeHandle(ref, () => ({
+        generateSuggestionsForMessage: (messageData, context) => {
+            return generateSuggestions(messageData, context);
+        }
+    }));
+
     // Auto-generate on first open and when new messages arrive
     const lastMessageCountRef = React.useRef(0);
 
@@ -120,24 +145,33 @@ const AISuggestionSidebar = ({
             lastMessageCountRef.current = currentMessageCount;
             generateSuggestions();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen, messages]);
 
     if (!isOpen) return null;
 
     return (
-        <div className="h-full w-100 flex-shrink-0 relative z-100">
-            <Card className="h-full rounded-2xl backdrop-blur-md p-4 flex flex-col gap-4 border-l">
+        <div className="h-full w-120 shrink-0 relative z-100">
+            <Card className="h-full rounded-2xl backdrop-blur-md p-2 flex flex-col gap-2 border-l">
                 {/* Header */}
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <Sparkles className="h-5 w-5 text-primary" />
-                        <h3 className="font-black text-slate-500 text-lg">AI Suggestions</h3>
+                    <div className="flex items-center gap-4 pl-2 m-2">
+                        <Image
+                            src="/Nuvge-logo.svg"
+                            alt="App Logo"
+                            width={32}
+                            height={32}
+                            className=" mx-auto"
+                            priority
+                        />
+            
+                        <h3 className="font-black text-slate-500 text-2xl">Nuvge AI</h3>
                     </div>
                     <Button
                         variant="ghost"
                         size="icon"
                         onClick={onClose}
-                        className="h-8 w-8 rounded-xl hover:bg-primary/10"
+                        className="h-8 w-8 mr-2 rounded-xl hover:bg-primary/10"
                     >
                         <X className="h-4 w-4" />
                     </Button>
@@ -145,12 +179,14 @@ const AISuggestionSidebar = ({
 
                 {/* Selected Message Display */}
                 {selectedMessage && (
-                    <Card className="p-3 bg-muted/50 border-primary/20">
+                    <Card className="p-3 bg-muted/50 border-0">
                         <div className="flex items-start justify-between gap-2">
-                            <div className="flex-1 min-w-0">
-                                <p className="text-xs text-muted-foreground mb-1">Replying to:</p>
-                                <p className="text-sm font-medium truncate">{selectedMessage.senderName}</p>
-                                <p className="text-sm line-clamp-2 text-muted-foreground">
+                            <div className="flex-1 min-w-0 text-xl ml-1">
+                                <p className="text-sm text-muted-foreground mb-1 flex flex-row">Replying to 
+                                    <ChevronRight className='h-5 w-5'/>
+                                    <p className='px-2 truncate font-bold'>{selectedMessage.senderName}</p>
+                                </p>
+                                <p className="text-lg line-clamp-2 text-muted-foreground text-primary">
                                     {selectedMessage.content.join(' ')}
                                 </p>
                             </div>
@@ -158,7 +194,7 @@ const AISuggestionSidebar = ({
                                 <Button
                                     size="icon"
                                     variant="ghost"
-                                    className="h-6 w-6 flex-shrink-0"
+                                    className="h-6 w-6 shrink-0"
                                     onClick={onClearSelection}
                                     title="Clear selection"
                                 >
@@ -168,27 +204,6 @@ const AISuggestionSidebar = ({
                         </div>
                     </Card>
                 )}
-
-                {/* Refresh Button */}
-                <Button
-                    onClick={generateSuggestions}
-                    disabled={loading}
-                    variant="outline"
-                    className="w-full rounded-xl p-6"
-                    size="sm"
-                >
-                    {loading ? (
-                        <>
-                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                            Generating...
-                        </>
-                    ) : (
-                        <>
-                            <RefreshCw className="h-4 w-4 mr-2 p-4" />
-                            Generate New Suggestions
-                        </>
-                    )}
-                </Button>
 
                 {/* Suggestions List */}
                 <div className="flex-1 overflow-y-auto space-y-3 no-scrollbar">
@@ -216,6 +231,27 @@ const AISuggestionSidebar = ({
                     )}
                 </div>
 
+                {/* Refresh Button */}
+                <Button
+                    onClick={() => generateSuggestions()}
+                    disabled={loading}
+                    variant="outline"
+                    className="w-full rounded-2xl p-6"
+                    size="sm"
+                >
+                    {loading ? (
+                        <>
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            Generating...
+                        </>
+                    ) : (
+                        <>
+                            <RefreshCw className="h-4 w-4 mr-2 p-4" />
+                            Generate New Suggestions
+                        </>
+                    )}
+                </Button>
+
                 {/* Footer Info */}
                 <div className="text-xs text-muted-foreground text-center pt-2 border-t">
                     Powered by Google Gemini 2.5 Flash
@@ -223,6 +259,8 @@ const AISuggestionSidebar = ({
             </Card>
         </div>
     );
-};
+});
+
+AISuggestionSidebar.displayName = 'AISuggestionSidebar';
 
 export default AISuggestionSidebar;

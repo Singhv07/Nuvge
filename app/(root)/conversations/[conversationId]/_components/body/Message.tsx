@@ -99,7 +99,7 @@ const Message = ({
 
           {/* AI Reply Button - positioned at lower right of message */}
           {!fromCurrentUser && isHovered && onRequestAISuggestion && messageId && (
-            <div className="absolute -top-0 -right-12">
+            <div className="absolute top-0 -right-12">
               <AIReplyButton
                 onClick={handleAIRequest}
                 variant="message"

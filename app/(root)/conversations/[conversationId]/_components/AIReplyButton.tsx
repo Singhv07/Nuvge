@@ -22,11 +22,11 @@ const AIReplyButton: React.FC<AIReplyButtonProps> = ({
       <Button
         size="sm"
         variant="ghost"
-        className="h-10 w-10 hover:bg-primary/20 transition-opacity opacity-90 hover:opacity-100 rounded-2xl"
+        className="h-10 w-10 p-0 rounded-2xl transition-colors duration-200 text-primary hover:bg-primary/20 hover:text-primary flex items-center justify-center"
         onClick={onClick}
         title={title}
       >
-        <Sparkles className="h-6 w-6 text-primary" />
+        <Sparkles className="h-6 w-6" />
       </Button>
     )
   }

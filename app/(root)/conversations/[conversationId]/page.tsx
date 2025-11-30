@@ -12,7 +12,7 @@ import ChatInput, { ChatInputRef } from "./_components/input/ChatInput";
 import RemoveFriendDialog from "./_components/dialogs/RemoveFriendDialog";
 import DeleteGroupDialog from "./_components/dialogs/DeleteGroupDialog";
 import LeaveGroupDialog from "./_components/dialogs/LeaveGroupDialog";
-import AISuggestionSidebar from "./_components/AISuggestionSidebar";
+import AISuggestionSidebar, { AISuggestionSidebarRef } from "./_components/AISuggestionSidebar";
 
 type Props = {
   params: Promise<{ conversationId: Id<"conversations"> }>;
@@ -37,6 +37,7 @@ const ConversationsPage = ({ params }: Props) => {
   } | null>(null)
 
   const chatInputRef = useRef<ChatInputRef>(null)
+  const aiSidebarRef = useRef<AISuggestionSidebarRef>(null)
 
   const handleRequestAISuggestion = (messageData: {
     content: string[];
@@ -46,8 +47,17 @@ const ConversationsPage = ({ params }: Props) => {
   }) => {
     setSelectedMessage(messageData)
     setAiSidebarOpen(true)
+    // Trigger suggestion generation directly
+    aiSidebarRef.current?.generateSuggestionsForMessage(
+      messageData,
+      {
+        isGroup: conversation?.isGroup || false,
+        participantCount: conversation?.isGroup
+          ? (conversation?.otherMembers?.length || 0) + 1
+          : 2
+      }
+    )
   }
-  // Removed unused state for call type
 
   if (conversation === undefined) {
     return (
@@ -154,6 +164,7 @@ const ConversationsPage = ({ params }: Props) => {
         </div>
 
         <AISuggestionSidebar
+          ref={aiSidebarRef}
           isOpen={aiSidebarOpen}
           onClose={() => {
             setAiSidebarOpen(false)
