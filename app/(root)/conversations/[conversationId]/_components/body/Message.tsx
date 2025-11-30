@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import { format } from 'date-fns'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
 import { motion } from 'framer-motion'
-import { Sparkles } from 'lucide-react'
+import AISuggestionSidebar from '../AISuggestionSidebar'
+import AIReplyButton from '../AIReplyButton'
 
 type Props = {
   fromCurrentUser: boolean
@@ -76,7 +76,7 @@ const Message = ({
         onMouseLeave={() => setIsHovered(false)}
       >
         <div
-          className={cn('px-4 py-2 rounded-3xl max-w-[70%]', {
+          className={cn('px-4 py-2 rounded-3xl max-w-[70%] relative', {
             'bg-primary text-primary-foreground': fromCurrentUser,
             'bg-secondary text-secondary-foreground': !fromCurrentUser,
             'rounded-br-none': !lastByUser && fromCurrentUser,
@@ -84,7 +84,7 @@ const Message = ({
           })}
         >
           {type === 'text' && (
-            <p className="text-wrap break-words whitespace-pre-wrap break-all">{content}</p>
+            <p className="text-wrap wrap-break-word whitespace-pre-wrap break-all">{content}</p>
           )}
           {showTime && (
             <p
@@ -96,20 +96,18 @@ const Message = ({
               {formatTime(createdAt)}
             </p>
           )}
-        </div>
 
-        {/* AI Reply Button - positioned absolutely to avoid layout shift */}
-        {!fromCurrentUser && isHovered && onRequestAISuggestion && messageId && (
-          <Button
-            size="sm"
-            variant="ghost"
-            className="absolute -right-10 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-primary/10 transition-opacity opacity-90 hover:opacity-100"
-            onClick={handleAIRequest}
-            title="Get AI reply suggestions"
-          >
-            <Sparkles className="h-4 w-4 text-primary" />
-          </Button>
-        )}
+          {/* AI Reply Button - positioned at lower right of message */}
+          {!fromCurrentUser && isHovered && onRequestAISuggestion && messageId && (
+            <div className="absolute -top-0 -right-12">
+              <AIReplyButton
+                onClick={handleAIRequest}
+                variant="message"
+                title="Get AI reply suggestions"
+              />
+            </div>
+          )}
+        </div>
 
         {seen}
       </div>

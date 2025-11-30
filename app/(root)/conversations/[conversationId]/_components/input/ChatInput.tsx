@@ -13,7 +13,8 @@ import { toast } from 'sonner'
 import z from 'zod'
 import TextAreaAutosize from 'react-textarea-autosize'
 import { Button } from '@/components/ui/button'
-import { CornerRightUp, Sparkles } from 'lucide-react'
+import { CornerRightUp } from 'lucide-react'
+import AIReplyButton from '../AIReplyButton'
 
 const chatMessageSchema = z.object({
   content: z.string().min(1, {
@@ -99,18 +100,11 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(({ onToggleAI, isAIOp
             className="flex gap-2 items-end w-full"
           >
             {/* AI Suggestion Toggle Button */}
-            <Button
-              type="button"
-              size="icon"
-              variant="ghost"
-              onClick={onToggleAI}
-              className={`rounded-xl transition-all duration-300 flex-shrink-0
-                ${isAIOpen ? 'bg-primary/10 text-primary hover:bg-primary/20' : 'hover:bg-gray-500/10'}
-                ${isFocused ? '-translate-y-0' : 'translate-y-0'}`}
-              title={isAIOpen ? "Hide AI Suggestions" : "Show AI Suggestions"}
-            >
-              <Sparkles className={`h-5 w-5 ${isAIOpen ? 'fill-primary' : ''}`} />
-            </Button>
+            <AIReplyButton
+              onClick={onToggleAI || (() => {})}
+              variant="input"
+              isActive={isAIOpen}
+            />
 
             <FormField
               control={form.control}
