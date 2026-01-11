@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "NODE_OPTIONS='--no-deprecation' next build --turbopack",
+    "build": "npx convex deploy --bundle && NODE_OPTIONS='--no-deprecation' next build --turbopack",
     "start": "next start",
     "lint": "eslint \"app/**/*.{ts,tsx,js,jsx}\" \"components/**/*.{ts,tsx,js,jsx}\" \"convex/**/*.{ts,tsx,js,jsx}\" --ext .ts,.tsx,.js,.jsx"
   },
@@ -26,7 +26,7 @@
     "ai": "^5.0.100",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "convex": "^1.28.0",
+    "convex": "^1.31.3",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.23.24",
     "lucide-react": "^0.545.0",
